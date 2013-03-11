@@ -9,7 +9,7 @@ import com.github.rexim.{
 }
 
 class LoprogContextSpec extends FlatSpec with ShouldMatchers {
-  "A LoprogContext" should "TODO: give a description" in {
+  "A LoprogContext" should "perform simple queries on facts" in {
     val predicates = List(
       Predicate(Functor("human", List(Atom("john"))), List()),
       Predicate(Functor("human", List(Atom("lisa"))), List()),
