@@ -36,4 +36,24 @@ class LoprogContextSpec extends FlatSpec with ShouldMatchers {
     context.performQuery(queryCatFemale) should equal (List(Some(Map("X" -> Atom("toma")))))
     context.performQuery(queryHumanMale) should equal (List(Some(Map("X" -> Atom("john")))))
   }
+
+  it should "support operation of unification" in {
+    // p(X, f(Y), a)
+    val left = Functor("p", List(
+      Variable("X"),
+      Functor("f", List(Variable("Y"))),
+      Atom("a")
+    ))
+
+    // p(a, f(a), Y)
+    val right = Functor("p", List(
+      Atom("a"),
+      Functor("f", List(Atom("a"))),
+      Variable("Y")
+    ))
+
+    // ?- p(X, f(Y), a) = p(a, f(a), Y).
+    // X = a, Y = a.
+    LoprogContext.unify(left, right) should equal (Map("X" -> Atom("a"), "Y" -> Atom("a")))
+  }
 }

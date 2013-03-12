@@ -32,14 +32,27 @@ object LoprogContext {
 
       case (something, Variable(varName)) => Map(varName -> something)
 
-      // FIXME: unimplemented yet
+      // FIXME: do it functinal way
       case (Functor(leftName, leftArgs), Functor(rightName, rightArgs))
           if leftName == rightName && leftArgs.size == rightArgs.size => {
-            leftArgs.zip(rightArgs).map({
-              case (left, right) => unify(left, right)
-            }).foldLeft(Map[String, Term]())({
-              case (acc, m) => acc ++ m
-            })
+            var result = Map[String, Term]()
+
+            for((left, right) <- leftArgs.zip(rightArgs)) {
+              val bindings = unify(left, right)
+              if(bindings != null) {
+                for((key, value) <- bindings) {
+                  if(!result.contains(key)) {
+                    result = result + (key -> value)
+                  } else if(value != result(key)) {
+                    return null
+                  }
+                }
+              } else {
+                return null
+              }
+            }
+
+            result
           }
 
       case _ => null
