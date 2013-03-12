@@ -32,7 +32,7 @@ object LoprogContext {
 
       case (something, Variable(varName)) => Map(varName -> something)
 
-      // FIXME: do it functinal way
+      // FIXME: do it functional way
       case (Functor(leftName, leftArgs), Functor(rightName, rightArgs))
           if leftName == rightName && leftArgs.size == rightArgs.size => {
             var result = Map[String, Term]()
@@ -60,5 +60,8 @@ object LoprogContext {
 }
 
 class LoprogContext(predicates: List[Predicate]) {
-  def performQuery(query: List[Functor]): List[Option[Map[String, Term]]] = null
+  type FoundFunction = Map[String, Term] => Boolean
+
+  def visitSolutions(query: List[Functor], found: FoundFunction): Unit = {
+  }
 }
