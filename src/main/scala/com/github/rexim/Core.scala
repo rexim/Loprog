@@ -20,11 +20,27 @@ object LoprogContext {
       case (Atom(leftName), Atom(rightName))
           if leftName == rightName => Map()
 
+      case (Variable(leftVarName), Variable(rightVarName)) => {
+        val sharedVarName = generateVarName
+        Map(
+          leftVarName -> Variable(sharedVarName),
+          rightVarName -> Variable(sharedVarName)
+        )
+      }
+
       case (Variable(varName), something) => Map(varName -> something)
+
+      case (something, Variable(varName)) => Map(varName -> something)
 
       // FIXME: unimplemented yet
       case (Functor(leftName, leftArgs), Functor(rightName, rightArgs))
-          if leftName == rightName && leftArgs.size == rightArgs.size => null
+          if leftName == rightName && leftArgs.size == rightArgs.size => {
+            leftArgs.zip(rightArgs).map({
+              case (left, right) => unify(left, right)
+            }).foldLeft(Map[String, Term]())({
+              case (acc, m) => acc ++ m
+            })
+          }
 
       case _ => null
     }
