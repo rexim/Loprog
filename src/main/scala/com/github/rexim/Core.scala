@@ -60,8 +60,10 @@ object LoprogContext {
 }
 
 class LoprogContext(predicates: List[Predicate]) {
-  type FoundFunction = Map[String, Term] => Boolean
+  type VisitFunction = Map[String, Term] => Boolean
 
-  def visitSolutions(query: List[Functor], found: FoundFunction): Unit = {
-  }
+  def visitSolutions(
+    query: List[Functor],
+    visit: VisitFunction
+  ): Unit = {}
 }
