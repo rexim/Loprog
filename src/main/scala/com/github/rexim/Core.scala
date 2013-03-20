@@ -7,38 +7,52 @@ case class Functor(name: String, args: List[Term]) extends Term
 
 case class Predicate(head: Functor, body: List[Functor])
 
-object LoprogContext {
+object Loprog {
+  type VisitFunction = Map[String, Term] => Unit
+
   def unify(
     left: Term,
     right: Term,
     bindings: Map[String, Term]
-  ): Boolean = (left, right) match {
-    case (Atom(leftName), Atom(rightName)) => leftName == rightName
+  ): Option[Map[String, Term]] = (left, right) match {
+    case (Atom(leftName), Atom(rightName)) if leftName == rightName =>
+      Some(bindings)
 
-    case (atom: Atom, Variable(varName)) =>
-      if(bindings.contains(varName)) unify(atom, bindings.get(varName))
-      else true
-
-    case (variable: Variable, atom: Atom) => unify(atom, variable)
-
-    case (Variable(leftName), Variable(rightName)) =>
-      if(bindings.contains(leftName) && bindings.contains(rightName)) {
-        unify(bindings(leftName), bindings(rightName))
-      } else {
-        true
+    case (Variable(varName), right) =>
+      bindings.get(varName) match {
+        case Some(left) =>
+          unify(left, right, bindings)
+        case None =>
+          Some(bindings + (varName -> right))
       }
 
-    // ...
+    case (left, variable: Variable) =>
+      unify(variable, left, bindings)
 
-    case _ => false
+    case (Functor(leftName, leftArgs), Functor(rightName, rightArgs))
+        if leftName == rightName && leftArgs.size == rightArgs.size => {
+          var result = bindings
+
+          for((left, right) <- leftArgs.zip(rightArgs))
+            unify(left, right, result) match {
+              case Some(newBindings) =>
+                result = result ++ newBindings
+              case None =>
+                return None
+            }
+
+          Some(result)
+        }
+
+    case _ => None
   }
-}
-
-class LoprogContext(predicates: List[Predicate]) {
-  type VisitFunction = Map[String, Term] => Boolean
 
   def visitSolutions(
+    predicates: List[Predicate],
     query: List[Functor],
-    visit: VisitFunction
-  ): Unit = {}
+    visit: VisitFunction,
+    bindings: Map[String, Term]
+  ): Unit = {
+    // ...
+  }
 }
