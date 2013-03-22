@@ -52,7 +52,20 @@ object Loprog {
     query: List[Functor],
     visit: VisitFunction,
     bindings: Map[String, Term]
-  ): Unit = {
-    // ...
+  ): Unit = query match {
+    case functor :: restOfQuery =>
+      for(Predicate(head, body) <- predicates)
+        unify(head, functor, bindings) match {
+          case Some(nextBindings) =>
+            visitSolutions(
+              predicates,
+              body ++ restOfQuery,
+              visit,
+              nextBindings
+            )
+          case None => // skip the predicate
+        }
+
+    case List() => visit(bindings)
   }
 }
