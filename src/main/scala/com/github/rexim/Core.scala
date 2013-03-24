@@ -1,20 +1,30 @@
 package com.github.rexim
 
 abstract class Term
-case class Atom(name: String) extends Term
-case class Variable(name: String) extends Term
-case class Functor(name: String, args: List[Term]) extends Term
+
+case class Atom(name: String) extends Term {
+  override def toString = name
+}
+
+case class Variable(name: String) extends Term {
+  override def toString = name
+}
+
+case class Functor(name: String, args: List[Term]) extends Term {
+  override def toString = s"$name(" + args.mkString(", ") + ")"
+}
 
 case class Predicate(head: Functor, body: List[Functor])
 
 object Loprog {
-  type VisitFunction = Map[String, Term] => Unit
+  type Bindings = Map[String, Term]
+  type VisitFunction = Bindings => Unit
 
   def unify(
     left: Term,
     right: Term,
-    bindings: Map[String, Term]
-  ): Option[Map[String, Term]] = (left, right) match {
+    bindings: Bindings
+  ): Option[Bindings] = (left, right) match {
     case (Atom(leftName), Atom(rightName)) if leftName == rightName =>
       Some(bindings)
 
@@ -51,7 +61,7 @@ object Loprog {
     predicates: List[Predicate],
     query: List[Functor],
     visit: VisitFunction,
-    bindings: Map[String, Term]
+    bindings: Bindings
   ): Unit = query match {
     case functor :: restOfQuery =>
       for(Predicate(head, body) <- predicates)

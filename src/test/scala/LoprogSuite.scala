@@ -23,13 +23,8 @@ class LoprogSuite extends FunSuite {
 
     // ?- p(X, f(Y), a) = p(a, f(a), Y).
     // X = a; Y = a.
-    Loprog.unify(left, right, Map()) match {
-      case Some(bindings) => {
-        assert(bindings.get("X") === Some(Atom("a")))
-        assert(bindings.get("Y") === Some(Atom("a")))
-      }
-      case None => assert(false, s"$left doesn't unify $right")
-    }
+    val bindings = Loprog.unify(left, right, Map())
+    assert(bindings === Some(Map("X" -> Atom("a"), "Y" -> Atom("a"))))
   }
 
   test("unify: unification with shared references") {
@@ -52,19 +47,16 @@ class LoprogSuite extends FunSuite {
     )
 
     // ?- p(X, f(Y), a) = p(Z, f(b), a).
-    // X = _G101; Z = _G101; Y = b.
+    // X = Z; Y = b.
     Loprog.unify(left, right, Map()) match {
       case Some(bindings) => {
-        assert(bindings.get("Y") === Some(Atom("b")))
-        assert(bindings.get("X") === bindings.get("Z"))
-        bindings.get("X") match {
-          case Some(Variable(varName)) =>
-            assert(!bindings.contains(varName), "X refers to a bound variable")
-          case _ =>
-            assert(false, "X doesn't refer to a variable")
-        }
+        assert(bindings === Map("X" -> Variable("Z"), "Y" -> Atom("b")))
+        // FIXME: omg, make it shorter.
+        assert(Loprog.unify(Variable("X"), Atom("d"), bindings) === Some(Map("X" -> Variable("Z"), "Y" -> Atom("b"), "Z" -> Atom("d"))))
       }
-      case None => assert(false, s"$left doesn't unify $right")
+
+      case None =>
+        assert(false, s"$left doesn't unify $right")
     }
   }
 }
