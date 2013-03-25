@@ -14,14 +14,7 @@ class LoprogParsersSuite extends FunSuite {
     assert(result.get === Variable("Foo"))
   }
 
-  test("functor parser (without arguments)") {
-    val answer = Functor("foo", List())
-    val result = LoprogParsers.parse(LoprogParsers.functor, "foo")
-    assert(result.successful, "Unsuccessful parse result")
-    assert(result.get === answer)
-  }
-
-  test("functor parser (with arguments)") {
+  test("functor parser") {
     val answer = Functor("foo",
       List(
         Atom("a"),

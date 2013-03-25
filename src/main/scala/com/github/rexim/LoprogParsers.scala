@@ -39,14 +39,28 @@ object LoprogParsers extends RegexParsers {
     }
 
   def functor: Parser[Functor] =
-    functorName ~ (functorArguments ?) ^^ {
-      case name ~ Some(args) => Functor(name, args)
-      case name ~ None => Functor(name, List())
+    functorName ~ functorArguments ^^ {
+      case name ~ args => Functor(name, args)
     }
 
   def term: Parser[Term] =
-    atom | variable | functor
+    functor | atom | variable
+
+  def predicateHead: Parser[Functor] =
+    (functor | atom) ^^ {
+      case Atom(name) => Functor(name, List())
+      case functor: Functor => functor
+    }
+
+  def predicateBody: Parser[List[Functor]] =
+    ":-" ~ functor ~ rep("," ~ functor) ^^ {
+      case _ ~ x ~ xs =>
+        x :: (xs.map({case _ ~ y => y}))
+    }
 
   def predicate: Parser[Predicate] =
-    "" ^^ {_ => Predicate(Functor("", List()), List())} // TODO: implement
+    predicateHead ~ (predicateBody ?) ~ "." ^^ {
+      case head ~ Some(body) ~ _ => Predicate(head, body)
+      case head ~ None ~ _ => Predicate(head, List())
+    }
 }
