@@ -2,6 +2,7 @@ package com.github.rexim
 
 import scala.util.parsing.combinator._
 import scala.util.matching.Regex
+import scala.language.postfixOps // the compiler asked me nicely for that import
 
 object LoprogParsers extends RegexParsers {
   def regexMatch(r: Regex): Parser[Regex.Match] = new Parser[Regex.Match] {
@@ -18,15 +19,34 @@ object LoprogParsers extends RegexParsers {
     }
   }
 
-  def atom = regexMatch("([a-z][a-zA-Z0-9]*)".r) ^^ {
-    m => Atom(m.group(1))
-  }
+  def atom: Parser[Atom] =
+    regexMatch("([a-z][a-zA-Z0-9]*)".r) ^^ {
+      m => Atom(m.group(1))
+    }
 
-  def variable = regexMatch("([A-Z][a-zA-Z0-9]*)".r) ^^ {
-    m => Variable(m.group(1))
-  }
+  def variable: Parser[Variable] =
+    regexMatch("([A-Z][a-zA-Z0-9]*)".r) ^^ {
+      m => Variable(m.group(1))
+    }
 
-  def functor = "" // TODO: implement
+  def functorName: Parser[String] =
+    regexMatch("([a-z][a-zA-Z0-9]*)".r) ^^ { _.group(1) }
 
-  def predicate = "" // TODO: implement
+  def functorArguments: Parser[List[Term]] =
+    "(" ~ term ~ rep("," ~ term) ~ ")" ^^ {
+      case _ ~ x ~ xs ~ _ =>
+        x :: (xs.map({case _ ~ y => y}))
+    }
+
+  def functor: Parser[Functor] =
+    functorName ~ (functorArguments ?) ^^ {
+      case name ~ Some(args) => Functor(name, args)
+      case name ~ None => Functor(name, List())
+    }
+
+  def term: Parser[Term] =
+    atom | variable | functor
+
+  def predicate: Parser[Predicate] =
+    "" ^^ {_ => Predicate(Functor("", List()), List())} // TODO: implement
 }
