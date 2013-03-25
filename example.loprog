@@ -3,7 +3,7 @@ human(lisa).
 human(silver).
 human(toby).
 human(diana).
-human(anny)
+human(anny).
 
 man(john).
 man(silver).
