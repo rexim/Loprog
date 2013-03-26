@@ -11,18 +11,18 @@ object LoprogRepl {
     while(true) {
       print("?- ")
 
-      val query =
-        LoprogParsers.parse(
-          LoprogParsers.query,
-          readLine
-        ).get
+      val query = LoprogParsers.parse(LoprogParsers.query, readLine)
 
-      Loprog.visitSolutions(predicates, query, {
-        m => {
-          println(m)
-          readLine
-        }
-      }, Map())
+      if(query.successful) {
+        Loprog.visitSolutions(predicates, query.get, {
+          m => {
+            print(m)
+            readLine
+          }
+        }, Map())
+      } else {
+        println(query)
+      }
     }
   }
 }
