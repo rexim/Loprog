@@ -70,4 +70,28 @@ object Loprog {
 
     case List() => visit(bindings)
   }
+
+  def addPrefixToVars(prefix: String, term: Term): Term =
+    term match {
+      case Variable(varName) =>
+        Variable(s"$prefix::$varName")
+      case Functor(name, args) =>
+        Functor(name, args.map(addPrefixToVars(prefix, _)))
+      case _ => term
+    }
+
+  // FIXME: omg, what is that? (refactoring is required)
+  def scopePredicate(predicate: Predicate): Predicate = {
+    val prefix = predicate.hashCode.toString
+    predicate match {
+      case Predicate(Functor(headName, headArgs), body) =>
+        Predicate(
+          Functor(headName, headArgs.map(addPrefixToVars(prefix, _))),
+          body.map({
+            case Functor(bodyName, bodyArgs) =>
+              Functor(bodyName, bodyArgs.map(addPrefixToVars(prefix, _)))
+          })
+        )
+    }
+  }
 }
