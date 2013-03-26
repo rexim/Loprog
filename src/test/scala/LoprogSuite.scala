@@ -22,10 +22,16 @@ class LoprogSuite extends FunSuite {
       )
     )
 
-    // ?- p(X, f(Y), a) = p(a, f(a), Y).
     // X = a; Y = a.
+    val answer = Map(
+      "X" -> Functor("a", List()),
+      "Y" -> Functor("a", List())
+    )
+
+    // ?- p(X, f(Y), a) = p(a, f(a), Y).
     val bindings = Loprog.unify(left, right, Map())
-    assert(bindings === Some(Map("X" -> Functor("a", List()), "Y" -> Functor("a", List()))))
+
+    assert(bindings === Some(answer))
   }
 
   test("unify: unification with shared references") {
@@ -114,7 +120,13 @@ class LoprogSuite extends FunSuite {
         solutions.append(bindings)
       }, Map())
 
-    // FIXME: omg, and make this shorter too.
-    assert(solutions.toList.map(_.get("X")) == List(Some(Functor("a", List())), Some(Functor("a", List())), Some(Functor("b", List())), Some(Functor("d", List()))))
+    val answer = List(
+      Some(Functor("a", List())),
+      Some(Functor("a", List())),
+      Some(Functor("b", List())),
+      Some(Functor("d", List()))
+    )
+
+    assert(solutions.toList.map(_.get("X")) === answer)
   }
 }
