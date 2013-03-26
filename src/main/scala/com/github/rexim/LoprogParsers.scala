@@ -65,4 +65,10 @@ object LoprogParsers extends RegexParsers {
     }
 
   def sourceCode: Parser[List[Predicate]] = rep(predicate)
+
+  def query: Parser[List[Functor]] =
+    functor ~ rep("," ~ functor) ~ "." ^^ {
+      case x ~ xs ~ _ =>
+        x :: (xs.map({case _ ~ y => y}))
+    }
 }
