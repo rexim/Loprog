@@ -52,7 +52,7 @@ class LoprogSuite extends FunSuite {
     Loprog.unify(left, right, Map()) match {
       case Some(bindings) => {
         assert(bindings === Map("X" -> Variable("Z"), "Y" -> Atom("b")))
-        // FIXME: omg, make it shorter.
+        // FIXME: omg, make this shorter.
         assert(Loprog.unify(Variable("X"), Atom("d"), bindings) === Some(Map("X" -> Variable("Z"), "Y" -> Atom("b"), "Z" -> Atom("d"))))
       }
 
@@ -114,6 +114,7 @@ class LoprogSuite extends FunSuite {
         solutions.append(bindings)
       }, Map())
 
+    // FIXME: omg, and make this shorter too.
     assert(solutions.toList.map(_.get("X")) == List(Some(Atom("a")), Some(Atom("a")), Some(Atom("b")), Some(Atom("d"))))
   }
 }

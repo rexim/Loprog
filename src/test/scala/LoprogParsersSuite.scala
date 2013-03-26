@@ -27,7 +27,7 @@ class LoprogParsersSuite extends FunSuite {
     assert(result.get === answer)
   }
 
-  test("predicate parser") {
+  test("predicate parser (with body and arguments)") {
     val answer = Predicate(Functor("p", List(Variable("A"), Variable("B"))),
       List(
         Functor("f", List(Variable("A"))),
@@ -39,6 +39,14 @@ class LoprogParsersSuite extends FunSuite {
       LoprogParsers.predicate,
       "p(A, B) :- f(A), g(B)."
     )
+
+    assert(result.successful, "Unsuccessful parse result")
+    assert(result.get === answer)
+  }
+
+  test("predicate parser (without body and arguments)") {
+    val answer = Predicate(Functor("foo", List()), List())
+    val result = LoprogParsers.parse(LoprogParsers.predicate, "foo.")
 
     assert(result.successful, "Unsuccessful parse result")
     assert(result.get === answer)
