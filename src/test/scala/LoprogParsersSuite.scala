@@ -2,12 +2,6 @@ import org.scalatest.FunSuite
 import com.github.rexim._
 
 class LoprogParsersSuite extends FunSuite {
-  test("atom parser") {
-    val result = LoprogParsers.parse(LoprogParsers.atom, "foo")
-    assert(result.successful, "Unsuccessful parse result")
-    assert(result.get === Atom("foo"))
-  }
-
   test("variable parser") {
     val result = LoprogParsers.parse(LoprogParsers.variable, "Foo")
     assert(result.successful, "Unsuccessful parse result")
@@ -17,7 +11,7 @@ class LoprogParsersSuite extends FunSuite {
   test("functor parser") {
     val answer = Functor("foo",
       List(
-        Atom("a"),
+        Functor("a", List()),
         Functor("g", List(Variable("X"))),
         Variable("Y")
       )

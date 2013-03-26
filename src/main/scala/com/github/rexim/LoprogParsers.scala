@@ -19,11 +19,6 @@ object LoprogParsers extends RegexParsers {
     }
   }
 
-  def atom: Parser[Atom] =
-    regexMatch("([a-z][a-zA-Z0-9]*)".r) ^^ {
-      m => Atom(m.group(1))
-    }
-
   def variable: Parser[Variable] =
     regexMatch("([A-Z][a-zA-Z0-9]*)".r) ^^ {
       m => Variable(m.group(1))
@@ -39,18 +34,13 @@ object LoprogParsers extends RegexParsers {
     }
 
   def functor: Parser[Functor] =
-    functorName ~ functorArguments ^^ {
-      case name ~ args => Functor(name, args)
+    functorName ~ (functorArguments ?) ^^ {
+      case name ~ Some(args) => Functor(name, args)
+      case name ~ None => Functor(name, List())
     }
 
   def term: Parser[Term] =
-    functor | atom | variable
-
-  def predicateHead: Parser[Functor] =
-    (functor | atom) ^^ {
-      case Atom(name) => Functor(name, List())
-      case functor: Functor => functor
-    }
+    functor | variable
 
   def predicateBody: Parser[List[Functor]] =
     ":-" ~ functor ~ rep("," ~ functor) ^^ {
@@ -59,7 +49,7 @@ object LoprogParsers extends RegexParsers {
     }
 
   def predicate: Parser[Predicate] =
-    predicateHead ~ (predicateBody ?) ~ "." ^^ {
+    functor ~ (predicateBody ?) ~ "." ^^ {
       case head ~ Some(body) ~ _ => Predicate(head, body)
       case head ~ None ~ _ => Predicate(head, List())
     }

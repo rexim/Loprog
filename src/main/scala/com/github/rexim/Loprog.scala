@@ -2,9 +2,8 @@ package com.github.rexim
 
 abstract class Term
 
-case class Atom(name: String) extends Term
-case class Variable(name: String) extends Term
 case class Functor(name: String, args: List[Term]) extends Term
+case class Variable(name: String) extends Term
 
 case class Predicate(head: Functor, body: List[Functor])
 
@@ -17,9 +16,6 @@ object Loprog {
     right: Term,
     bindings: Bindings
   ): Option[Bindings] = (left, right) match {
-    case (Atom(leftName), Atom(rightName)) if leftName == rightName =>
-      Some(bindings)
-
     case (Variable(varName), right) =>
       bindings.get(varName) match {
         case Some(left) =>
@@ -73,11 +69,10 @@ object Loprog {
 
   def addPrefixToVars(prefix: String, term: Term): Term =
     term match {
-      case Variable(varName) =>
-        Variable(s"$prefix::$varName")
       case Functor(name, args) =>
         Functor(name, args.map(addPrefixToVars(prefix, _)))
-      case _ => term
+      case Variable(varName) =>
+        Variable(s"$prefix::$varName")
     }
 
   // FIXME: omg, what is that? (refactoring is required)

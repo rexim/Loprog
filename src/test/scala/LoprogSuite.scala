@@ -9,15 +9,15 @@ class LoprogSuite extends FunSuite {
       List(
         Variable("X"),
         Functor("f", List(Variable("Y"))),
-        Atom("a")
+        Functor("a", List())
       )
     )
 
     // p(a, f(a), Y)
     val right = Functor("p",
       List(
-        Atom("a"),
-        Functor("f", List(Atom("a"))),
+        Functor("a", List()),
+        Functor("f", List(Functor("a", List()))),
         Variable("Y")
       )
     )
@@ -25,7 +25,7 @@ class LoprogSuite extends FunSuite {
     // ?- p(X, f(Y), a) = p(a, f(a), Y).
     // X = a; Y = a.
     val bindings = Loprog.unify(left, right, Map())
-    assert(bindings === Some(Map("X" -> Atom("a"), "Y" -> Atom("a"))))
+    assert(bindings === Some(Map("X" -> Functor("a", List()), "Y" -> Functor("a", List()))))
   }
 
   test("unify: unification with shared references") {
@@ -34,7 +34,7 @@ class LoprogSuite extends FunSuite {
       List(
         Variable("X"),
         Functor("f", List(Variable("Y"))),
-        Atom("a")
+        Functor("a", List())
       )
     )
 
@@ -42,8 +42,8 @@ class LoprogSuite extends FunSuite {
     val right = Functor("p",
       List(
         Variable("Z"),
-        Functor("f", List(Atom("b"))),
-        Atom("a")
+        Functor("f", List(Functor("b", List()))),
+        Functor("a", List())
       )
     )
 
@@ -51,9 +51,9 @@ class LoprogSuite extends FunSuite {
     // X = Z; Y = b.
     Loprog.unify(left, right, Map()) match {
       case Some(bindings) => {
-        assert(bindings === Map("X" -> Variable("Z"), "Y" -> Atom("b")))
+        assert(bindings === Map("X" -> Variable("Z"), "Y" -> Functor("b", List())))
         // FIXME: omg, make this shorter.
-        assert(Loprog.unify(Variable("X"), Atom("d"), bindings) === Some(Map("X" -> Variable("Z"), "Y" -> Atom("b"), "Z" -> Atom("d"))))
+        assert(Loprog.unify(Variable("X"), Functor("d", List()), bindings) === Some(Map("X" -> Variable("Z"), "Y" -> Functor("b", List()), "Z" -> Functor("d", List()))))
       }
 
       case None =>
@@ -64,7 +64,7 @@ class LoprogSuite extends FunSuite {
   test("visitSolutions: a simple query on a program.") {
     val program = List(
       // p(a).
-      Predicate(Functor("p", List(Atom("a"))), List()),
+      Predicate(Functor("p", List(Functor("a", List()))), List()),
 
       // p(X) :- q(X), r(X).
       Predicate(Functor("p", List(Variable("p1::X"))),
@@ -86,22 +86,22 @@ class LoprogSuite extends FunSuite {
         )),
 
       // r(a).
-      Predicate(Functor("r", List(Atom("a"))), List()),
+      Predicate(Functor("r", List(Functor("a", List()))), List()),
 
       // r(b).
-      Predicate(Functor("r", List(Atom("b"))), List()),
+      Predicate(Functor("r", List(Functor("b", List()))), List()),
 
       // s(a).
-      Predicate(Functor("s", List(Atom("a"))), List()),
+      Predicate(Functor("s", List(Functor("a", List()))), List()),
 
       // s(b).
-      Predicate(Functor("s", List(Atom("b"))), List()),
+      Predicate(Functor("s", List(Functor("b", List()))), List()),
 
       // s(c).
-      Predicate(Functor("s", List(Atom("c"))), List()),
+      Predicate(Functor("s", List(Functor("c", List()))), List()),
 
       // u(d).
-      Predicate(Functor("u", List(Atom("d"))), List())
+      Predicate(Functor("u", List(Functor("d", List()))), List())
     )
 
     // ?- p(X).
@@ -115,6 +115,6 @@ class LoprogSuite extends FunSuite {
       }, Map())
 
     // FIXME: omg, and make this shorter too.
-    assert(solutions.toList.map(_.get("X")) == List(Some(Atom("a")), Some(Atom("a")), Some(Atom("b")), Some(Atom("d"))))
+    assert(solutions.toList.map(_.get("X")) == List(Some(Functor("a", List())), Some(Functor("a", List())), Some(Functor("b", List())), Some(Functor("d", List()))))
   }
 }
