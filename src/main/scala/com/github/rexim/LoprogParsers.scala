@@ -63,4 +63,6 @@ object LoprogParsers extends RegexParsers {
       case head ~ Some(body) ~ _ => Predicate(head, body)
       case head ~ None ~ _ => Predicate(head, List())
     }
+
+  def sourceCode: Parser[List[Predicate]] = rep(predicate)
 }
