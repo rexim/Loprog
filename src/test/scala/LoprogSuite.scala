@@ -1,6 +1,6 @@
 import org.scalatest.FunSuite
 import scala.collection.mutable.ListBuffer
-import com.github.rexim._
+import ru.org.codingteam.loprog._
 
 class LoprogSuite extends FunSuite {
   test("unify: simple unification") {

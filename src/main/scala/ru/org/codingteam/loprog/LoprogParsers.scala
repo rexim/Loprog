@@ -1,4 +1,4 @@
-package com.github.rexim
+package ru.org.codingteam.loprog
 
 import scala.util.parsing.combinator._
 import scala.util.matching.Regex

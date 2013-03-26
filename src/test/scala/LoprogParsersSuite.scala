@@ -1,5 +1,5 @@
 import org.scalatest.FunSuite
-import com.github.rexim._
+import ru.org.codingteam.loprog._
 
 class LoprogParsersSuite extends FunSuite {
   test("variable parser") {

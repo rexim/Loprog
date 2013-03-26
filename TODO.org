@@ -3,4 +3,6 @@
    We can just add some unique prefix for every variable's name in a
    predicate's head and body. I think a hashcode of the predicate
    would be a nice prefix.
+
 ** TODO Implement REPL
+** TODO Implement built-in predicates

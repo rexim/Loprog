@@ -1,4 +1,4 @@
-package com.github.rexim
+package ru.org.codingteam.loprog
 
 abstract class Term
 

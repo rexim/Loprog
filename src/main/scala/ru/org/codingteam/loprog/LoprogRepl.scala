@@ -1,4 +1,4 @@
-package com.github.rexim
+package ru.org.codingteam.loprog
 
 object LoprogRepl {
   def start(fileName: String) = {
