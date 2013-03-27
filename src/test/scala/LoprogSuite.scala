@@ -58,7 +58,7 @@ class LoprogSuite extends FunSuite {
     Loprog.unify(left, right, Map()) match {
       case Some(bindings) => {
         assert(bindings === Map("X" -> Variable("Z"), "Y" -> Functor("b", List())))
-        // FIXME: omg, make this shorter.
+        // FIXME(rexim): omg, make this shorter.
         assert(Loprog.unify(Variable("X"), Functor("d", List()), bindings) === Some(Map("X" -> Variable("Z"), "Y" -> Functor("b", List()), "Z" -> Functor("d", List()))))
       }
 
@@ -73,22 +73,22 @@ class LoprogSuite extends FunSuite {
       Predicate(Functor("p", List(Functor("a", List()))), List()),
 
       // p(X) :- q(X), r(X).
-      Predicate(Functor("p", List(Variable("p1::X"))),
+      Predicate(Functor("p", List(Variable("X"))),
         List(
-          Functor("q", List(Variable("p1::X"))),
-          Functor("r", List(Variable("p1::X")))
+          Functor("q", List(Variable("X"))),
+          Functor("r", List(Variable("X")))
         )),
 
       // p(X) :- u(X).
-      Predicate(Functor("p", List(Variable("p2::X"))),
+      Predicate(Functor("p", List(Variable("X"))),
         List(
-          Functor("u", List(Variable("p2::X")))
+          Functor("u", List(Variable("X")))
         )),
 
       // q(X) :- s(X).
-      Predicate(Functor("q", List(Variable("q1::X"))),
+      Predicate(Functor("q", List(Variable("X"))),
         List(
-          Functor("s", List(Variable("q1::X")))
+          Functor("s", List(Variable("X")))
         )),
 
       // r(a).

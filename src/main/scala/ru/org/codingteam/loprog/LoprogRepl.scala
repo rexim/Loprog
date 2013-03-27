@@ -6,7 +6,7 @@ object LoprogRepl {
       LoprogParsers.parse(
         LoprogParsers.sourceCode,
         scala.io.Source.fromFile(fileName).mkString
-      ).get.map(Loprog.scopePredicate(_))
+      ).get
 
     while(true) {
       print("?- ")

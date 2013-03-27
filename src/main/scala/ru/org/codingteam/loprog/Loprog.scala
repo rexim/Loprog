@@ -52,20 +52,22 @@ object Loprog {
     bindings: Bindings
   ): Unit = query match {
     case functor :: restOfQuery =>
-      for(Predicate(head, body) <- predicates)
+      for(Predicate(head, body) <- predicates.map(scopePredicate(_)))
         unify(head, functor, bindings) match {
-          case Some(nextBindings) =>
-            visitSolutions(
-              predicates,
-              body ++ restOfQuery,
-              visit,
-              nextBindings
-            )
+          case Some(nextBindings) => {
+            val nextQuery = collectGarbage(query, body ++ restOfQuery)
+            visitSolutions(predicates, nextQuery, visit, nextBindings)
+          }
           case None => // skip the predicate
         }
 
     case List() => visit(bindings)
   }
+
+  def collectGarbage(query: List[Functor], bindings: Bindings) =
+    // FIXME(rexim): implement this. Just remove from the bindings
+    // variables which are not used in the query.
+    bindings
 
   def addPrefixToVars(prefix: String, term: Term): Term =
     term match {
@@ -75,9 +77,13 @@ object Loprog {
         Variable(s"$prefix::$varName")
     }
 
-  // FIXME: omg, what is that? (refactoring is required)
+  // FIXME(rexim): omg, what is that? (refactoring is required)
+  var varPrefixNumber = 0
   def scopePredicate(predicate: Predicate): Predicate = {
-    val prefix = predicate.hashCode.toString
+    varPrefixNumber += 1
+    val hashCode = predicate.hashCode
+    val prefix = s"$varPrefixNumber::$hashCode"
+
     predicate match {
       case Predicate(Functor(headName, headArgs), body) =>
         Predicate(
