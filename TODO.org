@@ -1,8 +1,12 @@
 * Tasks
-** DONE Implement variables' scope
+** TODO Implement variables' scope
    We can just add some unique prefix for every variable's name in a
    predicate's head and body. I think a hashcode of the predicate
    would be a nice prefix.
+
+   *UPD* This solution sucks, 'cause it doesn't allow us to make
+   recursive predicates. I think we should generate a unique varprefix
+   each time we "invoke" (evaluate?) a predicate.
 
 ** TODO Implement REPL
 ** TODO Implement built-in predicates
