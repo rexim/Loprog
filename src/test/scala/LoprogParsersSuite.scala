@@ -47,10 +47,49 @@ class LoprogParsersSuite extends FunSuite {
   }
 
   test("sourceCode parser") {
-    assert(false, "Test is not written yet.");
+    val answer = List(
+      // foo.
+      Predicate(Functor("foo", List()), List()),
+
+      // bar(X) :-
+      //   herp,
+      //   derp(X).
+      Predicate(Functor("bar", List(Variable("X"))),
+        List(
+          Functor("herp", List()),
+          Functor("derp", List(Variable("X")))
+        )
+      )
+    )
+
+    val result = LoprogParsers.parse(
+      LoprogParsers.sourceCode,
+      """|foo.
+         |
+         |bar(X) :-
+         |  herp,
+         |  derp(X).""".stripMargin
+    )
+
+    assert(result.successful)
+    assert(result.get === answer)
   }
 
   test("query parser") {
-    assert(false, "Test is not written yet.");
+    val answer = List(
+      // f(X, a)
+      Functor("f", List(Variable("X"), Functor("a", List()))),
+
+      // g(b, Y)
+      Functor("g", List(Functor("b", List()), Variable("Y")))
+    )
+
+    val result = LoprogParsers.parse(
+      LoprogParsers.query,
+      "f(X, a), g(b, Y)."
+    )
+
+    assert(result.successful)
+    assert(result.get === answer)
   }
 }

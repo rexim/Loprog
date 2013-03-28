@@ -7,14 +7,20 @@ case class Functor(name: String, args: List[Term]) extends Term {
     if(args.isEmpty)
       name
     else
-      name + "(" + args.mkString(",") + ")"
+      name + "(" + args.mkString(", ") + ")"
 }
 
 case class Variable(name: String) extends Term {
   override def toString = name
 }
 
-case class Predicate(head: Functor, body: List[Functor])
+case class Predicate(head: Functor, body: List[Functor]) {
+  override def toString =
+    if(body.isEmpty)
+      s"$head."
+    else
+      head + " :- " + body.mkString(", ") + "."
+}
 
 object Loprog {
   type Bindings = Map[String, Term]
