@@ -45,4 +45,12 @@ class LoprogParsersSuite extends FunSuite {
     assert(result.successful, "Unsuccessful parse result")
     assert(result.get === answer)
   }
+
+  test("sourceCode parser") {
+    assert(false, "Test is not written yet.");
+  }
+
+  test("query parser") {
+    assert(false, "Test is not written yet.");
+  }
 }

@@ -2,8 +2,17 @@ package ru.org.codingteam.loprog
 
 abstract class Term
 
-case class Functor(name: String, args: List[Term]) extends Term
-case class Variable(name: String) extends Term
+case class Functor(name: String, args: List[Term]) extends Term {
+  override def toString =
+    if(args.isEmpty)
+      name
+    else
+      name + "(" + args.mkString(",") + ")"
+}
+
+case class Variable(name: String) extends Term {
+  override def toString = name
+}
 
 case class Predicate(head: Functor, body: List[Functor])
 
@@ -72,7 +81,6 @@ object Loprog {
         Variable(s"$prefix::$varName")
     }
 
-  // FIXME(rexim): omg, what is that? (refactoring is required)
   var varPrefixNumber = 0
   def scopePredicate(predicate: Predicate): Predicate = {
     varPrefixNumber += 1

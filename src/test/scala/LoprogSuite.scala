@@ -3,7 +3,7 @@ import scala.collection.mutable.ListBuffer
 import ru.org.codingteam.loprog._
 
 class LoprogSuite extends FunSuite {
-  test("unify: simple unification") {
+  test("unify (simple unification)") {
     // p(X, f(Y), a)
     val left = Functor("p",
       List(
@@ -34,7 +34,7 @@ class LoprogSuite extends FunSuite {
     assert(bindings === Some(answer))
   }
 
-  test("unify: unification with shared references") {
+  test("unify (unification with shared references)") {
     // p(X, f(Y), a)
     val left = Functor("p",
       List(
@@ -67,7 +67,7 @@ class LoprogSuite extends FunSuite {
     }
   }
 
-  test("visitSolutions: a simple query on a program.") {
+  test("visitSolutions") {
     val program = List(
       // p(a).
       Predicate(Functor("p", List(Functor("a", List()))), List()),
@@ -128,5 +128,33 @@ class LoprogSuite extends FunSuite {
     )
 
     assert(solutions.toList.map(_.get("X")) === answer)
+  }
+
+  test("addPrefixToVars") {
+    // foo(X, a, bar(Y))
+    val term = Functor("foo",
+      List(
+        Variable("X"),
+        Functor("a", List()),
+        Functor("bar", List(Variable("Y")))
+      )
+    )
+
+    // foo(prefix::X, a, bar(prefix::Y))
+    val answer = Functor("foo",
+      List(
+        Variable("prefix::X"),
+        Functor("a", List()),
+        Functor("bar", List(Variable("prefix::Y")))
+      )
+    )
+
+    val result = Loprog.addPrefixToVars("prefix", term)
+
+    assert(result === answer)
+  }
+
+  test("scopePredicate") {
+    assert(false, "Test is not written yet.");
   }
 }

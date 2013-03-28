@@ -15,8 +15,12 @@ object LoprogRepl {
 
       if(query.successful) {
         Loprog.visitSolutions(predicates, query.get, {
-          m => {
-            print(m)
+          bindings => {
+            bindings.foreach {
+              case (varName, term) =>
+                println(s"$varName = $term")
+            }
+
             readLine
           }
         }, Map())

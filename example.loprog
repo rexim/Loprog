@@ -18,6 +18,8 @@ pair(diana, john).
 pair(toby, lisa).
 pair(lisa, toby).
 
+equal(X, X).
+
 last(cons(Last, nil), Last).
 
 last(cons(X, Xs), Last) :-
