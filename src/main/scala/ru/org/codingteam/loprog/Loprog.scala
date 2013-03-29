@@ -60,13 +60,6 @@ object Loprog {
     case _ => None
   }
 
-  def addPrefixToVars(prefix: String, term: Term): Term =
-    term match {
-      case Functor(name, args) =>
-        Functor(name, args.map(addPrefixToVars(prefix, _)))
-      case Variable(varName) =>
-        Variable(s"$prefix::$varName")
-    }
 
   def visitSolutions(
     predicates: List[Predicate],
@@ -82,10 +75,10 @@ object Loprog {
       predicate match {
         case Predicate(Functor(headName, headArgs), body) =>
           Predicate(
-            Functor(headName, headArgs.map(addPrefixToVars(prefix, _))),
+            Functor(headName, headArgs.map(Utils.addPrefixToVars(prefix, _))),
             body.map({
               case Functor(bodyName, bodyArgs) =>
-                Functor(bodyName, bodyArgs.map(addPrefixToVars(prefix, _)))
+                Functor(bodyName, bodyArgs.map(Utils.addPrefixToVars(prefix, _)))
             })
           )
       }
@@ -94,7 +87,7 @@ object Loprog {
     visitSolutions(predicates, query, Map(), visit, scope)
   }
 
-  def visitSolutions(
+  private def visitSolutions(
     predicates: List[Predicate],
     query: List[Functor],
     bindings: Bindings,
