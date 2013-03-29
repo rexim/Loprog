@@ -11,5 +11,5 @@
 ** TODO Implement REPL
 *** TODO Think how to test the REPL
 ** TODO Implement built-in predicates
-** TODO Make more tests
 ** TODO Create documentation
+   

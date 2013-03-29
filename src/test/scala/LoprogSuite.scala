@@ -118,7 +118,7 @@ class LoprogSuite extends FunSuite {
     Loprog.visitSolutions(program, query,
       (bindings: Map[String, Term]) => {
         solutions.append(bindings)
-      }, Map())
+      })
 
     val answer = List(
       Some(Functor("a", List())),
@@ -152,9 +152,5 @@ class LoprogSuite extends FunSuite {
     val result = Loprog.addPrefixToVars("prefix", term)
 
     assert(result === answer)
-  }
-
-  test("scopePredicate") {
-    assert(false, "Test is not written yet.");
   }
 }

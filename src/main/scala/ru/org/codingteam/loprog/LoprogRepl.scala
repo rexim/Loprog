@@ -23,7 +23,7 @@ object LoprogRepl {
 
             readLine
           }
-        }, Map())
+        })
       } else {
         println(query)
       }

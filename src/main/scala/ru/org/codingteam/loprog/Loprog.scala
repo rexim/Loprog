@@ -60,25 +60,6 @@ object Loprog {
     case _ => None
   }
 
-  def visitSolutions(
-    predicates: List[Predicate],
-    query: List[Functor],
-    visit: VisitFunction,
-    bindings: Bindings
-  ): Unit = query match {
-    case functor :: restOfQuery =>
-      for(Predicate(head, body) <- predicates.map(scopePredicate(_)))
-        unify(head, functor, bindings) match {
-          case Some(nextBindings) => {
-            val nextQuery = body ++ restOfQuery
-            visitSolutions(predicates, nextQuery, visit, nextBindings)
-          }
-          case None => // skip the predicate
-        }
-
-    case List() => visit(bindings)
-  }
-
   def addPrefixToVars(prefix: String, term: Term): Term =
     term match {
       case Functor(name, args) =>
@@ -87,21 +68,50 @@ object Loprog {
         Variable(s"$prefix::$varName")
     }
 
-  var varPrefixNumber = 0
-  def scopePredicate(predicate: Predicate): Predicate = {
-    varPrefixNumber += 1
-    val hashCode = predicate.hashCode
-    val prefix = s"$varPrefixNumber::$hashCode"
+  def visitSolutions(
+    predicates: List[Predicate],
+    query: List[Functor],
+    visit: VisitFunction
+  ): Unit = {
+    var prefixNumber = 0
+    def scope(predicate: Predicate): Predicate = {
+      prefixNumber += 1
+      val hashCode = predicate.hashCode
+      val prefix = s"$prefixNumber::$hashCode"
 
-    predicate match {
-      case Predicate(Functor(headName, headArgs), body) =>
-        Predicate(
-          Functor(headName, headArgs.map(addPrefixToVars(prefix, _))),
-          body.map({
-            case Functor(bodyName, bodyArgs) =>
-              Functor(bodyName, bodyArgs.map(addPrefixToVars(prefix, _)))
-          })
-        )
+      predicate match {
+        case Predicate(Functor(headName, headArgs), body) =>
+          Predicate(
+            Functor(headName, headArgs.map(addPrefixToVars(prefix, _))),
+            body.map({
+              case Functor(bodyName, bodyArgs) =>
+                Functor(bodyName, bodyArgs.map(addPrefixToVars(prefix, _)))
+            })
+          )
+      }
     }
+
+    visitSolutions(predicates, query, Map(), visit, scope)
+  }
+
+  def visitSolutions(
+    predicates: List[Predicate],
+    query: List[Functor],
+    bindings: Bindings,
+    visit: VisitFunction,
+    scope: Predicate => Predicate
+  ): Unit = query match {
+    case functor :: restOfQuery =>
+      for(Predicate(head, body) <- predicates.map(scope(_)))
+        unify(head, functor, bindings) match {
+          case Some(nextBindings) => {
+            val nextQuery = body ++ restOfQuery
+            visitSolutions(predicates, nextQuery, nextBindings, visit, scope)
+          }
+
+          case None => // skip the predicate
+        }
+
+    case List() => visit(bindings)
   }
 }
