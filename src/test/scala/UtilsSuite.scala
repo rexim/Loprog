@@ -25,4 +25,21 @@ class UtilsSuite extends FunSuite {
 
     assert(result === answer)
   }
+
+  test("collectVars") {
+    // foo(X, a, bar(Y))
+    val term = Functor("foo",
+      List(
+        Variable("X"),
+        Functor("a", List()),
+        Functor("bar", List(Variable("Y")))
+      )
+    )
+
+    val answer = Set("X", "Y")
+
+    val result = Utils.collectVars(term)
+
+    assert(result === answer)
+  }
 }

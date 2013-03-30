@@ -8,4 +8,12 @@ object Utils {
       case Variable(varName) =>
         Variable(s"$prefix::$varName")
     }
+
+  def collectVars(term: Term): Set[String] = term match {
+    case Variable(varName) => Set(varName)
+    case Functor(_, terms) =>
+      terms.foldLeft(Set[String]())({
+        case (acc, t) => acc ++ collectVars(t)
+      })
+  }
 }
