@@ -14,12 +14,15 @@ object LoprogRepl {
       val query = LoprogParsers.parse(LoprogParsers.query, readLine)
 
       if(query.successful) {
+        val vars = Utils.collectVars(query.get)
+
         Loprog.visitSolutions(predicates, query.get, {
           bindings => {
-            bindings.foreach {
-              case (varName, term) =>
-                println(s"$varName = $term")
-            }
+            for(varName <- vars)
+              bindings.get(varName) match {
+                case Some(term) => println(s"$varName = $term")
+                case None => // skip the varName
+              }
 
             readLine
           }
