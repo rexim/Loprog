@@ -9,11 +9,11 @@ object Utils {
         Variable(s"$prefix::$varName")
     }
 
-  def collectVars(term: Term): Set[String] = term match {
-    case Variable(varName) => Set(varName)
-    case Functor(_, terms) =>
-      terms.foldLeft(Set[String]())({
-        case (acc, t) => acc ++ collectVars(t)
-      })
-  }
+  def collectVars(terms: List[Term]): Set[String] =
+    terms.foldLeft(Set[String]()) {
+      case (acc, t) => t match {
+        case Variable(varName) => acc ++ Set(varName)
+        case Functor(_, args) => acc ++ collectVars(args)
+      }
+    }
 }

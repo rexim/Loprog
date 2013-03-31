@@ -27,18 +27,28 @@ class UtilsSuite extends FunSuite {
   }
 
   test("collectVars") {
-    // foo(X, a, bar(Y))
-    val term = Functor("foo",
-      List(
-        Variable("X"),
-        Functor("a", List()),
-        Functor("bar", List(Variable("Y")))
+    val terms = List(
+      // foo(X, a, bar(Y))
+      Functor("foo",
+        List(
+          Variable("X"),
+          Functor("a", List()),
+          Functor("bar", List(Variable("Y")))
+        )
+      ),
+
+      // baz(X, Z)
+      Functor("baz",
+        List(
+          Variable("X"),
+          Variable("Z")
+        )
       )
     )
 
-    val answer = Set("X", "Y")
+    val answer = Set("X", "Y", "Z")
 
-    val result = Utils.collectVars(term)
+    val result = Utils.collectVars(terms)
 
     assert(result === answer)
   }
