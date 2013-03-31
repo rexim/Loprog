@@ -1,5 +1,5 @@
 * Tasks
-** DONE Implement variables' scope
+** DONE Implement variables' scope.
    We can just add some unique prefix for every variable's name in a
    predicate's head and body. I think a hashcode of the predicate
    would be a nice prefix.
@@ -9,7 +9,9 @@
    each time we "invoke" (evaluate?) a predicate.
 
 ** TODO Implement REPL
-*** TODO Think how to test the REPL
-** TODO Implement built-in predicates
-** TODO Create documentation
+*** DONE Answer contains only vars which were in the query.
+*** TODO Whole answer. Without intermediate vars. Occur check.
+*** TODO Use JLine.
+** TODO Implement built-in predicates.
+** TODO Create documentation.
    
