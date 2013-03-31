@@ -19,10 +19,8 @@ object LoprogRepl {
         Loprog.visitSolutions(predicates, query.get, {
           bindings => {
             for(varName <- vars)
-              bindings.get(varName) match {
-                case Some(term) => println(s"$varName = $term")
-                case None => // skip the varName
-              }
+              if(bindings.contains(varName))
+                println(varName + " = " + Utils.showValue(varName, bindings))
 
             readLine
           }

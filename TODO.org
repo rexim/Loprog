@@ -10,7 +10,7 @@
 
 ** TODO Implement REPL
 *** DONE Answer contains only vars which were in the query.
-*** TODO Whole answer. Without intermediate vars. Occur check.
+*** DONE Whole answer. Without intermediate vars. Occur check.
 *** TODO Use JLine.
 ** TODO Implement built-in predicates.
 ** TODO Create documentation.
