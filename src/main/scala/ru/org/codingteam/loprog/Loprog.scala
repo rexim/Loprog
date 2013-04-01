@@ -51,25 +51,15 @@ object Loprog {
     query: List[Functor],
     visit: VisitFunction
   ): Unit = {
-    var prefixNumber = 0
-    def scope(predicate: Predicate): Predicate = {
-      prefixNumber += 1
-      val hashCode = predicate.hashCode
-      val prefix = s"$prefixNumber::$hashCode"
+    val generator = Utils.createGenerator
 
-      predicate match {
-        case Predicate(Functor(headName, headArgs), body) =>
-          Predicate(
-            Functor(headName, headArgs.map(Utils.addPrefixToVars(prefix, _))),
-            body.map({
-              case Functor(bodyName, bodyArgs) =>
-                Functor(bodyName, bodyArgs.map(Utils.addPrefixToVars(prefix, _)))
-            })
-          )
-      }
-    }
-
-    visitSolutions(predicates, query, Map(), visit, scope)
+    visitSolutions(
+      predicates,
+      query,
+      Map(),
+      visit,
+      Utils.scopePredicate(_, generator)
+    )
   }
 
   private def visitSolutions(
@@ -80,14 +70,17 @@ object Loprog {
     scope: Predicate => Predicate
   ): Unit = query match {
     case functor :: restOfQuery =>
-      for(Predicate(head, body) <- predicates.map(scope(_)))
-        unify(head, functor, bindings) match {
-          case Some(nextBindings) => {
-            val nextQuery = body ++ restOfQuery
-            visitSolutions(predicates, nextQuery, nextBindings, visit, scope)
-          }
+      for(predicate <- predicates)
+        scope(predicate) match {
+          case Predicate(head, body) => 
+            unify(head, functor, bindings) match {
+              case Some(nextBindings) => {
+                val nextQuery = body ++ restOfQuery
+                visitSolutions(predicates, nextQuery, nextBindings, visit, scope)
+              }
 
-          case None => // skip the predicate
+              case None => // skip the predicate
+            }
         }
 
     case List() => visit(bindings)

@@ -1,14 +1,6 @@
 package ru.org.codingteam.loprog
 
 object Utils {
-  def addPrefixToVars(prefix: String, term: Term): Term =
-    term match {
-      case Functor(name, args) =>
-        Functor(name, args.map(addPrefixToVars(prefix, _)))
-      case Variable(varName) =>
-        Variable(s"$prefix::$varName")
-    }
-
   def collectVars(terms: List[Term]): Set[String] =
     terms.foldLeft(Set[String]()) {
       case (acc, t) => t match {
@@ -48,5 +40,47 @@ object Utils {
           args.map(showValue(varName, _, bindings)).mkString(", ")
         name + "(" + showedArgs + ")"
       }
+  }
+
+  def mapVarName(term: Term, f: (String) => String): Term =
+    term match {
+      case Variable(name) => Variable(f(name))
+      case Functor(name, args) =>
+        Functor(name, args.map(mapVarName(_, f)))
+    }
+
+  def createGenerator: () => String = {
+    var index = 0
+    () => {
+      index += 1
+      s"_G$index"
+    }
+  }
+
+  def scopePredicate(predicate: Predicate, generator: () => String) = {
+    var scope = Map[String, String]()
+
+    val varScoper: (String) => String =
+      (name) => {
+        scope.get(name) match {
+          case Some(scopedName) => scopedName
+          case None => {
+            val scopedName = generator()
+            scope = scope + (name -> scopedName)
+            scopedName
+          }
+        }
+      }
+
+
+    predicate match {
+      case Predicate(Functor(headName, headArgs), body) =>
+        Predicate(Functor(headName, headArgs.map(mapVarName(_, varScoper))),
+          body.map({
+            case Functor(bodyName, bodyArgs) =>
+              Functor(bodyName, bodyArgs.map(mapVarName(_, varScoper)))
+          })
+        )
+    }
   }
 }
