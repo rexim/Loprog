@@ -2,25 +2,10 @@ package ru.org.codingteam.loprog
 
 abstract class Term
 
-case class Functor(name: String, args: List[Term]) extends Term {
-  override def toString =
-    if(args.isEmpty)
-      name
-    else
-      name + "(" + args.mkString(", ") + ")"
-}
+case class Functor(name: String, args: List[Term]) extends Term
+case class Variable(name: String) extends Term
 
-case class Variable(name: String) extends Term {
-  override def toString = name
-}
-
-case class Predicate(head: Functor, body: List[Functor]) {
-  override def toString =
-    if(body.isEmpty)
-      s"$head."
-    else
-      head + " :- " + body.mkString(", ") + "."
-}
+case class Predicate(head: Functor, body: List[Functor])
 
 object Loprog {
   type Bindings = Map[String, Term]
