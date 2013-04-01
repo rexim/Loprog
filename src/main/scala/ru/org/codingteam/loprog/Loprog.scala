@@ -45,7 +45,6 @@ object Loprog {
     case _ => None
   }
 
-
   def visitSolutions(
     predicates: List[Predicate],
     query: List[Functor],
@@ -70,17 +69,14 @@ object Loprog {
     scope: Predicate => Predicate
   ): Unit = query match {
     case functor :: restOfQuery =>
-      for(predicate <- predicates)
-        scope(predicate) match {
-          case Predicate(head, body) => 
-            unify(head, functor, bindings) match {
-              case Some(nextBindings) => {
-                val nextQuery = body ++ restOfQuery
-                visitSolutions(predicates, nextQuery, nextBindings, visit, scope)
-              }
+      for(Predicate(head, body) <- predicates.map(scope(_)))
+        unify(head, functor, bindings) match {
+          case Some(nextBindings) => {
+            val nextQuery = body ++ restOfQuery
+            visitSolutions(predicates, nextQuery, nextBindings, visit, scope)
+          }
 
-              case None => // skip the predicate
-            }
+          case None => // skip the predicate
         }
 
     case List() => visit(bindings)

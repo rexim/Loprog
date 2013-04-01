@@ -23,4 +23,4 @@ equal(X, X).
 last(cons(Last, nil), Last).
 
 last(cons(X, Xs), Last) :-
-	last(Xs, Last).
+    last(Xs, Last).
