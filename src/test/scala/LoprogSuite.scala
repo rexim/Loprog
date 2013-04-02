@@ -96,4 +96,44 @@ class LoprogSuite extends FunSuite {
 
     assert(solutions.toList.map(_.get("X")) === answer)
   }
+
+  test("showValue (non-recursive)") {
+    val bindings = Map(
+      // X = Y
+      "X" -> Variable("Y"),
+
+      // Y = foo(a, Z)
+      "Y" -> Functor("foo",
+        List(
+          Functor("a", List()),
+          Variable("Z")
+        )
+      )
+    )
+
+    val answer = "foo(a, Z)"
+    val result = Loprog.showValue("X", bindings)
+
+    assert(result === answer)
+  }
+
+  test("showValue (recursive)") {
+    val bindings = Map(
+      // X = Y
+      "X" -> Variable("Y"),
+
+      // Y = foo(a, X)
+      "Y" -> Functor("foo",
+        List(
+          Functor("a", List()),
+          Variable("X")
+        )
+      )
+    )
+
+    val answer = "foo(a, **)"
+    val result = Loprog.showValue("X", bindings)
+
+    assert(result == answer)
+  }
 }

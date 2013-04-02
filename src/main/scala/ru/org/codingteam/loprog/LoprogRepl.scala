@@ -20,7 +20,7 @@ object LoprogRepl {
           bindings => {
             for(varName <- vars)
               if(bindings.contains(varName))
-                println(varName + " = " + Utils.showValue(varName, bindings))
+                println(varName + " = " + Loprog.showValue(varName, bindings))
 
             readLine
           }
