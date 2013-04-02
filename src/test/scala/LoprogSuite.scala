@@ -3,7 +3,7 @@ import scala.collection.mutable.ListBuffer
 import ru.org.codingteam.loprog._
 
 class LoprogSuite extends FunSuite {
-  test("unify (simple unification)") {
+  test("unify") {
     // p(X, f(Y), a)
     val left = Functor("p",
       List(
@@ -32,39 +32,6 @@ class LoprogSuite extends FunSuite {
     val bindings = Loprog.unify(left, right, Map())
 
     assert(bindings === Some(answer))
-  }
-
-  test("unify (unification with shared references)") {
-    // p(X, f(Y), a)
-    val left = Functor("p",
-      List(
-        Variable("X"),
-        Functor("f", List(Variable("Y"))),
-        Functor("a", List())
-      )
-    )
-
-    // p(Z, f(b), a)
-    val right = Functor("p",
-      List(
-        Variable("Z"),
-        Functor("f", List(Functor("b", List()))),
-        Functor("a", List())
-      )
-    )
-
-    // ?- p(X, f(Y), a) = p(Z, f(b), a).
-    // X = Z; Y = b.
-    Loprog.unify(left, right, Map()) match {
-      case Some(bindings) => {
-        assert(bindings === Map("X" -> Variable("Z"), "Y" -> Functor("b", List())))
-        // FIXME(rexim): omg, make this shorter.
-        assert(Loprog.unify(Variable("X"), Functor("d", List()), bindings) === Some(Map("X" -> Variable("Z"), "Y" -> Functor("b", List()), "Z" -> Functor("d", List()))))
-      }
-
-      case None =>
-        assert(false, s"$left doesn't unify $right")
-    }
   }
 
   test("visitSolutions") {
