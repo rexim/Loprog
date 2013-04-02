@@ -1,5 +1,7 @@
 package ru.org.codingteam.loprog
 
+import scala.collection.mutable.HashMap
+
 object Utils {
   def collectVars(terms: List[Term]): Set[String] =
     terms.foldLeft(Set[String]()) {
@@ -58,7 +60,7 @@ object Utils {
   }
 
   def scopePredicate(predicate: Predicate, generator: () => String) = {
-    var scope = Map[String, String]()
+    val scope = new HashMap[String, String]()
 
     val varScoper: (String) => String =
       (name) => {
@@ -66,7 +68,7 @@ object Utils {
           case Some(scopedName) => scopedName
           case None => {
             val scopedName = generator()
-            scope = scope + (name -> scopedName)
+            scope.put(name, scopedName)
             scopedName
           }
         }
