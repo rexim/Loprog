@@ -68,6 +68,10 @@ object Loprog {
     visit: VisitFunction,
     scope: Predicate => Predicate
   ): Unit = query match {
+
+    case Functor("halt", List()) :: _ =>
+      System.exit(0)
+
     case functor :: restOfQuery =>
       for(Predicate(head, body) <- predicates.map(scope(_)))
         unify(head, functor, bindings) match {
