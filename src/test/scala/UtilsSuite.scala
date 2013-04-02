@@ -110,16 +110,22 @@ class UtilsSuite extends FunSuite {
       )
     )
 
-    // foo(_G1, _G2) :-
-    //   bar(_G3), baz(_G1, _G3, _G2).
-    val answer = Predicate(Functor("foo", List(Variable("_G1"), Variable("_G2"))),
+    // foo(FOO1, FOO2) :-
+    //   bar(FOO3), baz(FOO1, FOO3, FOO2).
+    val answer = Predicate(Functor("foo", List(Variable("FOO1"), Variable("FOO2"))),
       List(
-        Functor("bar", List(Variable("_G3"))),
-        Functor("baz", List(Variable("_G1"), Variable("_G3"), Variable("_G2")))
+        Functor("bar", List(Variable("FOO3"))),
+        Functor("baz", List(Variable("FOO1"), Variable("FOO3"), Variable("FOO2")))
       )
     )
 
-    val generator = Utils.createGenerator
+    var index = 0;
+
+    val generator = () => {
+      index += 1
+      s"FOO$index"
+    }
+
     val result = Utils.scopePredicate(predicate, generator)
     assert(result === answer)
   }
