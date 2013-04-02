@@ -1,6 +1,6 @@
 # Loprog
 
-Loprog (*stands for **Lo**gical **Prog**ramming*) is a stupid
+Loprog (stands for **Lo**gical **Prog**ramming) is a stupid
 [Prolog](https://en.wikipedia.org/wiki/Prolog) implementation.
   
 ## Usage
