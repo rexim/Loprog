@@ -20,17 +20,8 @@ object LoprogParsers extends RegexParsers {
   }
 
   def variable: Parser[Variable] =
-    regexMatch("([A-Z][a-zA-Z0-9]*)".r) ^^ {
+    regexMatch("([_A-Z][_a-zA-Z0-9]*)".r) ^^ {
       m => Variable(m.group(1))
-    }
-
-  def functorName: Parser[String] =
-    regexMatch("([a-z][a-zA-Z0-9]*)".r) ^^ { _.group(1) }
-
-  def functorArguments: Parser[List[Term]] =
-    "(" ~ term ~ rep("," ~ term) ~ ")" ^^ {
-      case _ ~ x ~ xs ~ _ =>
-        x :: (xs.map({case _ ~ y => y}))
     }
 
   def functor: Parser[Functor] =
@@ -39,19 +30,28 @@ object LoprogParsers extends RegexParsers {
       case name ~ None => Functor(name, List())
     }
 
-  def term: Parser[Term] =
-    functor | variable
+  private def functorName: Parser[String] =
+    regexMatch("([a-z][_a-zA-Z0-9]*)".r) ^^ { _.group(1) }
 
-  def predicateBody: Parser[List[Functor]] =
-    ":-" ~ functor ~ rep("," ~ functor) ^^ {
-      case _ ~ x ~ xs =>
+  private def functorArguments: Parser[List[Term]] =
+    "(" ~ term ~ rep("," ~ term) ~ ")" ^^ {
+      case _ ~ x ~ xs ~ _ =>
         x :: (xs.map({case _ ~ y => y}))
     }
+
+  def term: Parser[Term] =
+    functor | variable
 
   def predicate: Parser[Predicate] =
     functor ~ (predicateBody ?) ~ "." ^^ {
       case head ~ Some(body) ~ _ => Predicate(head, body)
       case head ~ None ~ _ => Predicate(head, List())
+    }
+
+  private def predicateBody: Parser[List[Functor]] =
+    ":-" ~ functor ~ rep("," ~ functor) ^^ {
+      case _ ~ x ~ xs =>
+        x :: (xs.map({case _ ~ y => y}))
     }
 
   def sourceCode: Parser[List[Predicate]] = rep(predicate)
