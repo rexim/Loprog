@@ -1,22 +1,18 @@
-human(john).
-human(lisa).
-human(silver).
-human(toby).
-human(diana).
-human(anny).
+language(scala).
+language(haskell).
+language(ocaml).
+language(c_plus_plus).
+language(java).
+language(pascal).
 
-man(john).
-man(silver).
-man(toby).
+functional(scala).
+functional(haskell).
+functional(ocaml).
 
-woman(lisa).
-woman(diana).
-woman(anny).
-
-pair(john, diana).
-pair(diana, john).
-pair(toby, lisa).
-pair(lisa, toby).
+oop(scala).
+oop(ocaml).
+oop(c_plus_plus).
+oop(java).
 
 equal(X, X).
 
