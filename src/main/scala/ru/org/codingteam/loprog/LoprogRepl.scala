@@ -6,28 +6,32 @@ object LoprogRepl {
       LoprogParsers.parse(
         LoprogParsers.sourceCode,
         scala.io.Source.fromFile(fileName).mkString
-      ).get
+      )
 
-    while(true) {
-      print("?- ")
+    if(predicates.successful) {
+      while(true) {
+        print("?- ")
 
-      val query = LoprogParsers.parse(LoprogParsers.query, readLine)
+        val query = LoprogParsers.parse(LoprogParsers.query, readLine)
 
-      if(query.successful) {
-        val vars = Utils.collectVars(query.get)
+        if(query.successful) {
+          val vars = Utils.collectVars(query.get)
 
-        Loprog.visitSolutions(predicates, query.get, {
-          bindings => {
-            for(varName <- vars)
-              if(bindings.contains(varName))
-                println(varName + " = " + Loprog.showValue(varName, bindings))
+          Loprog.visitSolutions(predicates.get, query.get, {
+            bindings => {
+              for(varName <- vars)
+                if(bindings.contains(varName))
+                  println(varName + " = " + Loprog.showValue(varName, bindings))
 
-            readLine
-          }
-        })
-      } else {
-        println(query)
+              readLine
+            }
+          })
+        } else {
+          println(query)
+        }
       }
+    } else {
+      println(predicates)
     }
   }
 }

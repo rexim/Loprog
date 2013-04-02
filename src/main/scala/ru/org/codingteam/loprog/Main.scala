@@ -2,5 +2,8 @@ package ru.org.codingteam.loprog
 
 object Main {
   def main(args: Array[String]): Unit =
-    LoprogRepl.start("example.loprog")
+    if(args.size >= 1)
+      LoprogRepl.start(args(0))
+    else
+      println("Usage: loprog <source-file>")
 }
