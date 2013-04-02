@@ -1,11 +1,11 @@
 * Loprog
-  Loprog (/stands for *Lo*gical *Prog*ramming/) is a stupid Prolog
+  Loprog (/stands for *Lo*gical *Prog*ramming/) is a stupid [[https://en.wikipedia.org/wiki/Prolog][Prolog]]
   implementation.
 
 ** Usage
    First of all you need [[http://www.scala-sbt.org/][sbt]].
    - Use =sbt 'run <source-file>'= to run Loprog interpreter
-     consulting source-file
+     consulting source-file.
    - Use =sbt test= to run the tests.
 
 ** License
