@@ -136,4 +136,34 @@ class LoprogSuite extends FunSuite {
 
     assert(result == answer)
   }
+
+  test("scopePredicate") {
+    // foo(X, Y) :-
+    //   bar(Z), baz(X, Z, Y).
+    val predicate = Predicate(Functor("foo", List(Variable("X"), Variable("Y"))),
+      List(
+        Functor("bar", List(Variable("Z"))),
+        Functor("baz", List(Variable("X"), Variable("Z"), Variable("Y")))
+      )
+    )
+
+    // foo(FOO1, FOO2) :-
+    //   bar(FOO3), baz(FOO1, FOO3, FOO2).
+    val answer = Predicate(Functor("foo", List(Variable("FOO1"), Variable("FOO2"))),
+      List(
+        Functor("bar", List(Variable("FOO3"))),
+        Functor("baz", List(Variable("FOO1"), Variable("FOO3"), Variable("FOO2")))
+      )
+    )
+
+    var index = 0;
+
+    val generator = () => {
+      index += 1
+      s"FOO$index"
+    }
+
+    val result = Loprog.scopePredicate(predicate, generator)
+    assert(result === answer)
+  }
 }

@@ -1,5 +1,7 @@
 package ru.org.codingteam.loprog
 
+import scala.collection.mutable.HashMap
+
 abstract class Term
 
 case class Functor(name: String, args: List[Term]) extends Term
@@ -57,7 +59,7 @@ object Loprog {
       query,
       Map(),
       visit,
-      Utils.scopePredicate(_, generator)
+      scopePredicate(_, generator)
     )
   }
 
@@ -86,7 +88,7 @@ object Loprog {
     case List() => visit(bindings)
   }
 
-  def showValue(varName: String, bindings: Map[String, Term]): String =
+  def showValue(varName: String, bindings: Bindings): String =
     bindings.get(varName) match {
       case Some(term) => showValue(varName, term, bindings)
       case None => varName
@@ -95,7 +97,7 @@ object Loprog {
   private def showValue(
     varName: String,
     term: Term,
-    bindings: Map[String, Term]
+    bindings: Bindings
   ): String = term match {
     case Variable(nextVarName) =>
       if(nextVarName == varName) {
@@ -117,5 +119,32 @@ object Loprog {
           args.map(showValue(varName, _, bindings)).mkString(", ")
         name + "(" + showedArgs + ")"
       }
+  }
+
+  def scopePredicate(predicate: Predicate, generator: () => String) = {
+    val scope = new HashMap[String, String]()
+
+    val varScoper: (String) => String =
+      (name) => {
+        scope.get(name) match {
+          case Some(scopedName) => scopedName
+          case None => {
+            val scopedName = generator()
+            scope.put(name, scopedName)
+            scopedName
+          }
+        }
+      }
+
+
+    predicate match {
+      case Predicate(Functor(headName, headArgs), body) =>
+        Predicate(Functor(headName, headArgs.map(Utils.mapVarName(_, varScoper))),
+          body.map({
+            case Functor(bodyName, bodyArgs) =>
+              Functor(bodyName, bodyArgs.map(Utils.mapVarName(_, varScoper)))
+          })
+        )
+    }
   }
 }
