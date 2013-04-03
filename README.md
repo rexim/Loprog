@@ -7,28 +7,37 @@ Loprog (stands for **Lo**gical **prog**ramming) is a stupid
 
 First of all, you'll need [sbt](http://www.scala-sbt.org/).
 
-* Clone the repository somewhere: `$ git clone
-https://github.com/rexim/Loprog && cd Loprog`.
-* Ensure that the last changes don't break any functionality: `$ sbt
-test`.
-* Use `sbt 'run <source-file>'` to run the Loprog interpreter and load
-(consult) a source file.
+* `$ git clone git://github.com/rexim/Loprog.git Loprog && cd Loprog`
+— clone the repository somewhere;
+* `$ sbt test` — ensure that the last changes don't break any
+functionality;
+* `$ sbt 'run <source-code-file>'` — run the Loprog interpreter and
+load (consult) a source code file.
 
-Alright, let's go through examples.
+There are several examples of source code files in the Loprog
+directory. Let's go through them.
 
 ### example-01.loprog ###
 
 This example contains a simple database of programming languages and a
 couple of general purpose predicates.
 
-<!-- FIXME: extend this section -->
+Example related queries:
+
+* `?- oop(X), functional(X).` — what languages are object-oriented and
+  functional simultaneously?
+* `?- equal(X, f(X)).` — circular reference.
+* `?- last(cons(x, cons(y, cons(z, nil))), Last).` — the last element
+  of a list.
 
 ### example-02.loprog ###
 
 This example was taken from
 [here](http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/3_1.html)
 
-<!-- FIXME: extend this section -->
+Example related queries:
+
+* `?- p(X).` — should act like described in the link above.
 
 ## License ##
 
