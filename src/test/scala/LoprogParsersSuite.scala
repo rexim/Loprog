@@ -92,4 +92,20 @@ class LoprogParsersSuite extends FunSuite {
     assert(result.successful)
     assert(result.get === answer)
   }
+
+  test("removeComments") {
+    val input =
+      """|hello %world
+         |% foo bar
+         |herp%%derp""".stripMargin
+
+    val answer =
+      """|hello 
+         |
+         |herp""".stripMargin
+
+    val result = LoprogParsers.removeComments(input)
+
+    assert(result === answer)
+  }
 }

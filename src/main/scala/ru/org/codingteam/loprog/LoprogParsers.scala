@@ -61,4 +61,7 @@ object LoprogParsers extends RegexParsers {
       case x ~ xs ~ _ =>
         x :: (xs.map({case _ ~ y => y}))
     }
+
+  def removeComments(code: String): String =
+    code.split("\n").map(_.takeWhile(_ != '%')).mkString("\n")
 }
