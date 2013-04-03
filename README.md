@@ -1,16 +1,36 @@
-# Loprog
+# Loprog #
 
-Loprog (stands for **Lo**gical **Prog**ramming) is a stupid
+Loprog (stands for **Lo**gical **prog**ramming) is a stupid
 [Prolog](https://en.wikipedia.org/wiki/Prolog) implementation.
-  
-## Usage
 
-First of all you need [sbt](http://www.scala-sbt.org/).
-- Use `sbt 'run <source-file>'` to run Loprog interpreter consulting
-  source-file.
-- Use `sbt test` to run the tests.
+## Usage ##
 
-## License
+First of all, you'll need [sbt](http://www.scala-sbt.org/).
+
+* Clone the repository somewhere: `$ git clone
+https://github.com/rexim/Loprog && cd Loprog`.
+* Ensure that the last changes don't break any functionality: `$ sbt
+test`.
+* Use `sbt 'run <source-file>'` to run the Loprog interpreter and load
+(consult) a source file.
+
+Alright, let's go through examples.
+
+### example-01.loprog ###
+
+This example contains a simple database of programming languages and a
+couple of general purpose predicates.
+
+<!-- FIXME: extend this section -->
+
+### example-02.loprog ###
+
+This example was taken from
+[here](http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/3_1.html)
+
+<!-- FIXME: extend this section -->
+
+## License ##
 
 Copyright (C) 2013 Alexey Kutepov a.k.a rexim
 
