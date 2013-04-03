@@ -1,4 +1,8 @@
+name := "Loprog"
+
 version := "0.1-SNAPSHOT"
+
+mainClass in (Compile, run) := Some("ru.org.codingteam.loprog.Main")
 
 scalaVersion := "2.10.0"
 

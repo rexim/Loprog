@@ -5,5 +5,5 @@ object Main {
     if(args.size >= 1)
       LoprogRepl.start(args(0))
     else
-      println("Usage: loprog <source-file>")
+      println("Usage: loprog <source-code-file>")
 }
