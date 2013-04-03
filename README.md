@@ -13,6 +13,7 @@ First of all, you'll need [sbt](http://www.scala-sbt.org/).
 functionality;
 * `$ sbt 'run <source-code-file>'` — run the Loprog interpreter and
 load (consult) a source code file.
+* `?- halt.` — to quit the interpreter.
 
 There are several examples of source code files in the Loprog
 directory. Let's go through them.
