@@ -5,9 +5,24 @@
 %%
 %%  Circula reference:
 %%   ?- equal(X, f(X)).
+%%   X = f(**) ;
+%%   ?-
 %%
 %%  The last element of a list:
 %%   ?- last(cons(a, cons(b, cons(c, nil))), Last).
+%%   Last = c ;
+%%   ?-
+%%
+%%  Pretty complex example, which uses equal, last, and zip predicates:
+%%   ?- equal(Xs, cons(a, cons(b, cons(c, nil)))),
+%%   |  equal(Ys, cons(x, cons(y, cons(z, nil)))),
+%%   |  zip(Xs, Ys, Zs),
+%%   |  last(Zs, Last).
+%%   Xs = cons(a, cons(b, cons(c, nil))),
+%%   Ys = cons(x, cons(y, cons(z, nil))),
+%%   Zs = cons(pair(a, x), cons(pair(b, y), cons(pair(c, z), nil))),
+%%   Last = pair(c, z) ;
+%%   ?-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Equality of two terms.
@@ -17,3 +32,10 @@ equal(X, X).
 last(cons(Last, nil), Last).
 last(cons(X, Xs), Last) :-
     last(Xs, Last).
+
+%% Zip.
+zip(nil, nil, nil).
+zip(nil, cons(X, Xs), nil).
+zip(cons(X, Xs), nil, nil).
+zip(cons(X, Xs), cons(Y, Ys), cons(pair(X, Y), Zs)) :-
+    zip(Xs, Ys, Zs).
