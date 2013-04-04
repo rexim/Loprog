@@ -1,0 +1,19 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% This is some general purpose predicates
+%%
+%% Example queries:
+%%
+%%  Circula reference:
+%%   ?- equal(X, f(X)).
+%%
+%%  The last element of a list:
+%%   ?- last(cons(a, cons(b, cons(c, nil))), Last).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Equality of two terms.
+equal(X, X).
+
+%% The last element of a list.
+last(cons(Last, nil), Last).
+last(cons(X, Xs), Last) :-
+    last(Xs, Last).

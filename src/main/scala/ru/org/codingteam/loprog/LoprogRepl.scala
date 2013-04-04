@@ -24,11 +24,16 @@ object LoprogRepl {
 
           Loprog.visitSolutions(predicates.get, query.get, {
             bindings => {
-              for(varName <- vars)
-                if(bindings.contains(varName))
-                  println(varName + " = " + Loprog.showValue(varName, bindings))
+              val answer = vars.filter(bindings.contains(_)).map({
+                varName => s"$varName = ${Loprog.showValue(varName, bindings)}"
+              }).mkString(", ")
 
-              readLine
+              print(answer + " ")
+
+              if(readLine == ";")
+                Next
+              else
+                Abort
             }
           })
         } else {

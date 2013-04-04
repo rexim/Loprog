@@ -85,6 +85,7 @@ class LoprogSuite extends FunSuite {
     Loprog.visitSolutions(program, query,
       (bindings: Map[String, Term]) => {
         solutions.append(bindings)
+        Next
       })
 
     val answer = List(

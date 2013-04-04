@@ -1,0 +1,42 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% This is just a simple database of animals.
+%% 
+%% Example queries:
+%% 
+%%  Which dogs have black hair?
+%%   ?- dog(X), hair_color(X, black).
+%% 
+%%  Which dog and cat have the same hair color?
+%%   ?- dog(X), cat(Y), hair_color(X, C), hair_color(Y, C).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Dogs
+dog(donut).
+dog(beeper).
+dog(bazooka).
+dog(bizzy).
+
+%% Cats
+cat(haskell).
+cat(haiku).
+cat(hatcat).
+cat(valmont).
+cat(yoda).
+cat(nana).
+
+%% Animals
+animal(X) :- dog(X).
+animal(X) :- cat(X).
+
+%% Hair color
+hair_color(donut, black).
+hair_color(beeper, brown).
+hair_color(bazooka, black).
+hair_color(bizzy, grey).
+
+hair_color(haskell, black).
+hair_color(haiku, brown).
+hair_color(hatcat, white).
+hair_color(valmont, black).
+hair_color(yoda, brown).
+hair_color(nana, black).

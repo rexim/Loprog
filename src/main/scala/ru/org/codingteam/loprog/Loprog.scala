@@ -3,15 +3,18 @@ package ru.org.codingteam.loprog
 import scala.collection.mutable.HashMap
 
 abstract class Term
-
 case class Functor(name: String, args: List[Term]) extends Term
 case class Variable(name: String) extends Term
 
 case class Predicate(head: Functor, body: List[Functor])
 
+abstract class VisitStatus
+case object Abort extends VisitStatus
+case object Next extends VisitStatus
+
 object Loprog {
   type Bindings = Map[String, Term]
-  type VisitFunction = Bindings => Unit
+  type VisitFunction = Bindings => VisitStatus
 
   def unify(
     left: Term,
@@ -69,21 +72,33 @@ object Loprog {
     bindings: Bindings,
     visit: VisitFunction,
     scope: Predicate => Predicate
-  ): Unit = query match {
+  ): VisitStatus = query match {
 
     case Functor("halt", List()) :: _ =>
       System.exit(0)
+      Abort // actually, it doesn't matter
 
-    case functor :: restOfQuery =>
+    case functor :: restOfQuery => {
       for(Predicate(head, body) <- predicates.map(scope(_)))
         unify(head, functor, bindings) match {
           case Some(nextBindings) => {
             val nextQuery = body ++ restOfQuery
-            visitSolutions(predicates, nextQuery, nextBindings, visit, scope)
+            val status = visitSolutions(
+              predicates,
+              nextQuery,
+              nextBindings,
+              visit,
+              scope
+            )
+
+            if(status == Abort)
+              return Abort
           }
 
           case None => // skip the predicate
         }
+      Next
+    }
 
     case List() => visit(bindings)
   }

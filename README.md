@@ -9,37 +9,12 @@ programming language.
 First of all, you'll need [sbt](http://www.scala-sbt.org/).
 
 * `$ git clone git://github.com/rexim/Loprog.git Loprog && cd Loprog`
-— clone the repository somewhere;
+  — clone the repository somewhere;
 * `$ sbt test` — ensure that the last changes don't break any
-functionality;
-* `$ sbt 'run <source-code-file>'` — run the Loprog interpreter and
-load (consult) a source code file.
-* `?- halt.` — to quit the interpreter.
-
-There are several examples of source code files in the Loprog
-directory. Let's go through them.
-
-### example-01.loprog ###
-
-This example contains a simple database of programming languages and a
-couple of general purpose predicates.
-
-Example related queries:
-
-* `?- oop(X), functional(X).` — what languages are object-oriented and
-  functional simultaneously?
-* `?- equal(X, f(X)).` — circular reference.
-* `?- last(cons(x, cons(y, cons(z, nil))), Last).` — the last element
-  of a list.
-
-### example-02.loprog ###
-
-This example was taken from
-[here](http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/3_1.html)
-
-Example related queries:
-
-* `?- p(X).` — should act like described in the link above.
+  functionality;
+* `$ sbt 'run <source-code-file>'` — run the Loprog interpreter with a
+  source code file. There are some examples in the `examples`
+  directory. Feel free to experiment with them.
 
 ## License ##
 

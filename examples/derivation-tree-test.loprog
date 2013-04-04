@@ -1,3 +1,17 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% This example was taken from here:
+%% http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/3_1.html
+%%
+%% A query
+%%  ?- p(X).
+%% should return the follow solutions
+%%  X = a ;
+%%  X = a ;
+%%  X = b ;
+%%  X = d ;
+%% as described in the link above.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 p(a).                           % #1
 p(X) :- q(X), r(X).             % #2
 p(X) :- u(X).                   % #3
