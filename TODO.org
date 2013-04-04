@@ -14,4 +14,3 @@
 *** TODO Use JLine.
 ** TODO Implement built-in predicates.
 ** TODO Create documentation.
-   

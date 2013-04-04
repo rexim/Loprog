@@ -14,7 +14,10 @@ object LoprogParsers extends RegexParsers {
         case Some(matched) =>
           Success(matched, in.drop(start + matched.end - offset))
         case None =>
-          Failure("string matching regex `" + r + "' expected but `" + in.first + "' found", in.drop(start - offset))
+          Failure(
+            s"string matching regex `$r' expected but `${in.first}' found",
+            in.drop(start - offset)
+          )
       }
     }
   }

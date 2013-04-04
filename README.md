@@ -1,7 +1,8 @@
 # Loprog #
 
 Loprog (stands for **Lo**gical **prog**ramming) is a stupid
-[Prolog](https://en.wikipedia.org/wiki/Prolog) implementation.
+implementation of [Prolog](https://en.wikipedia.org/wiki/Prolog)
+programming language.
 
 ## Usage ##
 
