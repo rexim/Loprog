@@ -11,6 +11,7 @@
 ** TODO Implement REPL
 *** DONE Answer contains only vars which were in the query.
 *** DONE Whole answer. Without intermediate vars. Occur check.
-*** TODO Use JLine.
+*** DONE Use JLine.
+*** TODO Probably refactoring is required.
 ** TODO Implement built-in predicates.
 ** TODO Create documentation.
