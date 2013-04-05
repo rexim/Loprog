@@ -13,17 +13,17 @@ object LoprogRepl {
     while(piece.length() != 0 && piece.last != '.') {
       result.append(piece)
       con.setPrompt("")
-      con.print("| "); con.flush()
+      con.print("|  "); con.flush()
       piece = con.readLine().trim
     }
     result.append(piece)
 
     result.mkString("\n")
   }
-  
+
   def launch(fileName: String) {
     try {
-    	start(fileName)
+      start(fileName)
     } finally {  TerminalFactory.get().restore(); }
   }
 
@@ -42,7 +42,7 @@ object LoprogRepl {
           LoprogParsers.query,
           LoprogParsers.removeComments(readQuery(con))
         )
-        
+
         if(query.successful) {
           val vars = Utils.collectVars(query.get)
 
@@ -54,12 +54,14 @@ object LoprogRepl {
 
               con.print(answer + " "); con.flush()
               con.setPrompt("")
-              con.println(""); 
               if(con.readCharacter() == ';') {
+                con.println(";");
                 Next
               }
-              else
+              else {
+                con.println("")
                 Abort
+              }
             }
           })
         } else {
