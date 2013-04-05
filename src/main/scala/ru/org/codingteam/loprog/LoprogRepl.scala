@@ -2,24 +2,33 @@ package ru.org.codingteam.loprog
 
 import scala.io.Source
 import scala.collection.mutable.ListBuffer
+import jline.console.ConsoleReader
+import jline.TerminalFactory
 
 object LoprogRepl {
-  def readQuery: String = {
-    print("?- ")
+  def readQuery(con: ConsoleReader): String = {
     var result = new ListBuffer[String]
 
-    var piece = readLine.trim
-    while(piece.last != '.') {
+    var piece = con.readLine().trim
+    while(piece.length() != 0 && piece.last != '.') {
       result.append(piece)
-      print("|  ")
-      piece = readLine.trim
+      con.setPrompt("")
+      con.print("| "); con.flush()
+      piece = con.readLine().trim
     }
     result.append(piece)
 
     result.mkString("\n")
   }
+  
+  def launch(fileName: String) {
+    try {
+    	start(fileName)
+    } finally {  TerminalFactory.get().restore(); }
+  }
 
-  def start(fileName: String) = {
+  private def start(fileName: String) = {
+    val con = new ConsoleReader()
     val predicates =
       LoprogParsers.parse(
         LoprogParsers.sourceCode,
@@ -28,11 +37,12 @@ object LoprogRepl {
 
     if(predicates.successful) {
       while(true) {
+        con.setPrompt("?- ")
         val query = LoprogParsers.parse(
           LoprogParsers.query,
-          LoprogParsers.removeComments(readQuery)
+          LoprogParsers.removeComments(readQuery(con))
         )
-
+        
         if(query.successful) {
           val vars = Utils.collectVars(query.get)
 
@@ -42,20 +52,22 @@ object LoprogRepl {
                 varName => s"$varName = ${Loprog.showValue(varName, bindings)}"
               }).mkString(",\n")
 
-              print(answer + " ")
-
-              if(readLine == ";")
+              con.print(answer + " "); con.flush()
+              con.setPrompt("")
+              con.println(""); 
+              if(con.readCharacter() == ';') {
                 Next
+              }
               else
                 Abort
             }
           })
         } else {
-          println(query)
+          con.println(query toString())
         }
       }
     } else {
-      println(predicates)
+      con.println(predicates toString())
     }
   }
 }

@@ -8,4 +8,12 @@ scalaVersion := "2.10.0"
 
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
+libraryDependencies ++= Seq(
+    "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
+    "jline" % "jline" % "2.6")
+
+fork in run := true
+
+connectInput in run := true
+
+outputStrategy in run := Some(StdoutOutput)
