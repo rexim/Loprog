@@ -9,8 +9,9 @@ scalaVersion := "2.10.0"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 libraryDependencies ++= Seq(
-    "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
-    "jline" % "jline" % "2.6")
+  "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
+  "jline" % "jline" % "2.6"
+)
 
 fork in run := true
 
