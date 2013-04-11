@@ -43,7 +43,7 @@ object LoprogRepl {
 
         if(queryParseResult.successful) {
           val query = queryParseResult.get
-          val vars = Utils.collectVars(query)
+          val vars = Utils.collectVariables(query)
 
           Loprog.visitSolutions(predicates, query, {
             bindings => {

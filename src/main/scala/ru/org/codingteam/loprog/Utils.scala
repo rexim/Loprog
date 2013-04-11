@@ -3,7 +3,7 @@ package ru.org.codingteam.loprog
 import scala.collection.mutable.HashSet
 
 object Utils {
-  def collectVars(terms: List[Term]): List[Variable] = {
+  def collectVariables(terms: List[Term]): List[Variable] = {
     val result = new HashSet[Variable]
     terms.foreach(foreachVariable(_, result.add(_)))
     result.toList

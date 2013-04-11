@@ -16,36 +16,33 @@ object Loprog {
   type Bindings = Map[Variable, Term]
   type VisitFunction = Bindings => VisitStatus
 
-  def unify(
-    left: Term,
-    right: Term,
-    bindings: Bindings
-  ): Option[Bindings] = (left, right) match {
-    case (variable: Variable, right) =>
-      bindings.get(variable) match {
-        case Some(left) =>
-          unify(left, right, bindings)
-        case None =>
-          Some(bindings + (variable -> right))
-      }
-
-    case (left, variable: Variable) =>
-      unify(variable, left, bindings)
-
-    case (Functor(leftName, leftArgs), Functor(rightName, rightArgs))
-        if leftName == rightName && leftArgs.size == rightArgs.size => {
-          var result = bindings
-
-          for((left, right) <- leftArgs.zip(rightArgs))
-            unify(left, right, result) match {
-              case Some(newBindings) =>
-                result = result ++ newBindings
-              case None =>
-                return None
-            }
-
-          Some(result)
+  def unify(left: Term, right: Term, bindings: Bindings): Option[Bindings] =
+    (left, right) match {
+      case (variable: Variable, right) =>
+        bindings.get(variable) match {
+          case Some(left) =>
+            unify(left, right, bindings)
+          case None =>
+            Some(bindings + (variable -> right))
         }
+
+      case (left, variable: Variable) =>
+        unify(variable, left, bindings)
+
+      case (Functor(leftName, leftArgs), Functor(rightName, rightArgs))
+          if leftName == rightName && leftArgs.size == rightArgs.size => {
+            var result = bindings
+
+            for((left, right) <- leftArgs.zip(rightArgs))
+              unify(left, right, result) match {
+                case Some(newBindings) =>
+                  result = result ++ newBindings
+                case None =>
+                  return None
+              }
+
+            Some(result)
+          }
 
     case _ => None
   }

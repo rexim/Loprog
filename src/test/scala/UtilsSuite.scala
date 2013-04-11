@@ -3,7 +3,7 @@ import ru.org.codingteam.loprog._
 import scala.collection.mutable.ListBuffer
 
 class UtilsSuite extends FunSuite {
-  test("collectVars") {
+  test("collectVariables") {
     val terms = List(
       // foo(X, a, bar(Y))
       Functor("foo",
@@ -29,7 +29,7 @@ class UtilsSuite extends FunSuite {
       Variable("Z")
     ).sortWith(_.name < _.name)
 
-    val result = Utils.collectVars(terms)
+    val result = Utils.collectVariables(terms)
 
     assert(result.sortWith(_.name < _.name) === answer)
   }
