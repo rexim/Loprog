@@ -1,5 +1,6 @@
 import org.scalatest.FunSuite
 import ru.org.codingteam.loprog._
+import scala.collection.mutable.ListBuffer
 
 class UtilsSuite extends FunSuite {
   test("collectVars") {
@@ -22,11 +23,15 @@ class UtilsSuite extends FunSuite {
       )
     )
 
-    val answer = Set("X", "Y", "Z")
+    val answer = List(
+      Variable("X"),
+      Variable("Y"),
+      Variable("Z")
+    ).sortWith(_.name < _.name)
 
     val result = Utils.collectVars(terms)
 
-    assert(result === answer)
+    assert(result.sortWith(_.name < _.name) === answer)
   }
 
   test("mapVarName") {
@@ -58,5 +63,27 @@ class UtilsSuite extends FunSuite {
     assert(generator() === "_G1")
     assert(generator() === "_G2")
     assert(generator() === "_G3")
+  }
+
+  test("foreachVariable") {
+    // foo(X, bar(Y), baz)
+    val term = Functor("foo",
+      List(
+        Variable("X"),
+        Functor("bar", List(Variable("Y"))),
+        Variable("X")
+      )
+    )
+
+    val answer = List(
+      Variable("X"),
+      Variable("Y"),
+      Variable("X")
+    ).sortWith(_.name < _.name)
+
+    val result = new ListBuffer[Variable]
+    Utils.foreachVariable(term, result.append(_))
+
+    assert(result.sortWith(_.name < _.name) === answer)
   }
 }

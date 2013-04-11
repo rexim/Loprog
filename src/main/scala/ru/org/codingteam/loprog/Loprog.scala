@@ -13,7 +13,7 @@ case object Abort extends VisitStatus
 case object Next extends VisitStatus
 
 object Loprog {
-  type Bindings = Map[String, Term]
+  type Bindings = Map[Variable, Term]
   type VisitFunction = Bindings => VisitStatus
 
   def unify(
@@ -21,12 +21,12 @@ object Loprog {
     right: Term,
     bindings: Bindings
   ): Option[Bindings] = (left, right) match {
-    case (Variable(varName), right) =>
-      bindings.get(varName) match {
+    case (variable: Variable, right) =>
+      bindings.get(variable) match {
         case Some(left) =>
           unify(left, right, bindings)
         case None =>
-          Some(bindings + (varName -> right))
+          Some(bindings + (variable -> right))
       }
 
     case (left, variable: Variable) =>
@@ -103,26 +103,26 @@ object Loprog {
     case List() => visit(bindings)
   }
 
-  def showValue(varName: String, bindings: Bindings): String =
-    bindings.get(varName) match {
-      case Some(term) => showValue(varName, term, bindings)
-      case None => varName
+  def showValue(variable: Variable, bindings: Bindings): String =
+    bindings.get(variable) match {
+      case Some(term) => showValue(variable, term, bindings)
+      case None => variable.name
     }
 
   private def showValue(
-    varName: String,
+    variable: Variable,
     term: Term,
     bindings: Bindings
   ): String = term match {
-    case Variable(nextVarName) =>
-      if(nextVarName == varName) {
+    case nextVariable: Variable =>
+      if(nextVariable == variable) {
         "**"
       } else {
-        bindings.get(nextVarName) match {
+        bindings.get(nextVariable) match {
           case Some(nextTerm) =>
-            showValue(varName, nextTerm, bindings)
+            showValue(variable, nextTerm, bindings)
 
-          case None => nextVarName
+          case None => nextVariable.name
         }
       }
 
@@ -131,7 +131,7 @@ object Loprog {
         name
       } else {
         val showedArgs =
-          args.map(showValue(varName, _, bindings)).mkString(", ")
+          args.map(showValue(variable, _, bindings)).mkString(", ")
         name + "(" + showedArgs + ")"
       }
   }

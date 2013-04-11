@@ -48,7 +48,7 @@ object LoprogRepl {
           Loprog.visitSolutions(predicates, query, {
             bindings => {
               val answer = vars.filter(bindings.contains(_)).map({
-                varName => s"$varName = ${Loprog.showValue(varName, bindings)}"
+                variable => s"${variable.name} = ${Loprog.showValue(variable, bindings)}"
               }).mkString(",\n")
 
               con.print(answer + " "); con.flush()

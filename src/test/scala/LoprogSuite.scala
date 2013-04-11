@@ -24,8 +24,8 @@ class LoprogSuite extends FunSuite {
 
     // X = a; Y = a.
     val answer = Map(
-      "X" -> Functor("a", List()),
-      "Y" -> Functor("a", List())
+      Variable("X") -> Functor("a", List()),
+      Variable("Y") -> Functor("a", List())
     )
 
     // ?- p(X, f(Y), a) = p(a, f(a), Y).
@@ -80,10 +80,10 @@ class LoprogSuite extends FunSuite {
     // ?- p(X).
     val query = List(Functor("p", List(Variable("X"))))
 
-    val solutions = new ListBuffer[Map[String, Term]]()
+    val solutions = new ListBuffer[Map[Variable, Term]]()
 
     Loprog.visitSolutions(program, query,
-      (bindings: Map[String, Term]) => {
+      (bindings: Map[Variable, Term]) => {
         solutions.append(bindings)
         Next
       })
@@ -95,16 +95,16 @@ class LoprogSuite extends FunSuite {
       Some(Functor("d", List()))
     )
 
-    assert(solutions.toList.map(_.get("X")) === answer)
+    assert(solutions.toList.map(_.get(Variable("X"))) === answer)
   }
 
   test("showValue (non-recursive)") {
     val bindings = Map(
       // X = Y
-      "X" -> Variable("Y"),
+      Variable("X") -> Variable("Y"),
 
       // Y = foo(a, Z)
-      "Y" -> Functor("foo",
+      Variable("Y") -> Functor("foo",
         List(
           Functor("a", List()),
           Variable("Z")
@@ -113,7 +113,7 @@ class LoprogSuite extends FunSuite {
     )
 
     val answer = "foo(a, Z)"
-    val result = Loprog.showValue("X", bindings)
+    val result = Loprog.showValue(Variable("X"), bindings)
 
     assert(result === answer)
   }
@@ -121,10 +121,10 @@ class LoprogSuite extends FunSuite {
   test("showValue (recursive)") {
     val bindings = Map(
       // X = Y
-      "X" -> Variable("Y"),
+      Variable("X") -> Variable("Y"),
 
       // Y = foo(a, X)
-      "Y" -> Functor("foo",
+      Variable("Y") -> Functor("foo",
         List(
           Functor("a", List()),
           Variable("X")
@@ -133,7 +133,7 @@ class LoprogSuite extends FunSuite {
     )
 
     val answer = "foo(a, **)"
-    val result = Loprog.showValue("X", bindings)
+    val result = Loprog.showValue(Variable("X"), bindings)
 
     assert(result == answer)
   }

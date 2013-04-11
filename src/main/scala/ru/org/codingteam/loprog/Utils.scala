@@ -1,11 +1,13 @@
 package ru.org.codingteam.loprog
 
+import scala.collection.mutable.HashSet
+
 object Utils {
-  def collectVars(terms: List[Term]): Set[String] =
-    terms.foldLeft(Set[String]()) {
-      case (acc, Variable(varName)) => acc ++ Set(varName)
-      case (acc, Functor(_, args)) => acc ++ collectVars(args)
-    }
+  def collectVars(terms: List[Term]): List[Variable] = {
+    val result = new HashSet[Variable]
+    terms.foreach(foreachVariable(_, result.add(_)))
+    result.toList
+  }
 
   def mapVarName(term: Term, f: String => String): Term =
     term match {
@@ -21,4 +23,10 @@ object Utils {
       s"_G$index"
     }
   }
+
+  def foreachVariable(term: Term, action: Variable => Unit): Unit =
+    term match {
+      case variable: Variable => action(variable)
+      case Functor(_, args) => args.foreach(foreachVariable(_, action))
+    }
 }
