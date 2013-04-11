@@ -19,7 +19,7 @@ object LoprogRepl {
   def launch(fileName: String) {
     try {
       start(fileName)
-    } finally { TerminalFactory.get().restore(); }
+    } finally { TerminalFactory.get().restore() }
   }
 
   private def start(fileName: String) = {
