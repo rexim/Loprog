@@ -7,23 +7,19 @@ import jline.TerminalFactory
 
 object LoprogRepl {
   def readQuery(con: ConsoleReader): String = {
-    var result = new ListBuffer[String]
-    var piece = con.readLine().trim
-
-    while(piece.length() != 0 && piece.last != '.') {
-      result.append(piece)
-      con.setPrompt("|  ")
-      piece = con.readLine().trim
-    }
-
-    result.append(piece)
-    result.mkString("\n")
+    def read: List[String] => List[String] = _ match {
+        case Nil => read(con.readLine() :: Nil)
+        case ls @ x :: xs => val trmd = x.trim()
+          if (trmd == "" || trmd.last == '.') ls.reverse
+          else { con.setPrompt("|  "); read(con.readLine() :: ls) }
+      }
+    read(List.empty[String]) mkString ("\n")
   }
 
   def launch(fileName: String) {
     try {
       start(fileName)
-    } finally { TerminalFactory.get().restore(); }
+    } finally { TerminalFactory.get().restore() }
   }
 
   private def start(fileName: String) = {

@@ -79,7 +79,7 @@ object Loprog {
       Abort // actually, it doesn't matter
 
     case functor :: restOfQuery => {
-      for(Predicate(head, body) <- predicates.map(scope(_)))
+      for(Predicate(head, body) <- predicates.map(scope))
         unify(head, functor, bindings) match {
           case Some(nextBindings) => {
             val nextQuery = body ++ restOfQuery
