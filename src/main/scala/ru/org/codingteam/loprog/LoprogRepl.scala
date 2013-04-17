@@ -2,28 +2,23 @@ package ru.org.codingteam.loprog
 
 import scala.io.Source
 import scala.collection.mutable.ListBuffer
-import jline.console.ConsoleReader
-import jline.TerminalFactory
 
 object LoprogRepl {
-  def readQuery(con: ConsoleReader): String = {
+  def readQuery: String = {
     def read: List[String] => List[String] = _ match {
-        case Nil => read(con.readLine() :: Nil)
+        case Nil => read(readLine :: Nil)
         case ls @ x :: xs => val trmd = x.trim()
           if (trmd == "" || trmd.last == '.') ls.reverse
-          else { con.setPrompt("|  "); read(con.readLine() :: ls) }
+          else { print("|  "); read(readLine :: ls) }
       }
     read(List.empty[String]) mkString ("\n")
   }
 
   def launch(fileName: String) {
-    try {
-      start(fileName)
-    } finally { TerminalFactory.get().restore() }
+    start(fileName)
   }
 
   private def start(fileName: String) = {
-    val con = new ConsoleReader()
     val predicatesParseResult =
       LoprogParsers.parse(
         LoprogParsers.sourceCode,
@@ -34,11 +29,11 @@ object LoprogRepl {
       val predicates = predicatesParseResult.get
 
       while(true) {
-        con.setPrompt("?- ")
+        print("?- ");
 
         val queryParseResult = LoprogParsers.parse(
           LoprogParsers.query,
-          LoprogParsers.removeComments(readQuery(con))
+          LoprogParsers.removeComments(readQuery)
         )
 
         if(queryParseResult.successful) {
@@ -51,23 +46,21 @@ object LoprogRepl {
                 variable => s"${variable.name} = ${Loprog.showValue(variable, bindings)}"
               }).mkString(",\n")
 
-              con.print(answer + " "); con.flush()
-              if(con.readCharacter() == ';') {
-                con.println(";");
+              print(answer + " ");
+              if(readLine == ";") {
                 Next
               }
               else {
-                con.println("")
                 Abort
               }
             }
           })
         } else {
-          con.println(queryParseResult toString())
+          println(queryParseResult toString())
         }
       }
     } else {
-      con.println(predicatesParseResult toString())
+      println(predicatesParseResult toString())
     }
   }
 }
