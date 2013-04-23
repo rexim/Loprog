@@ -1,5 +1,8 @@
 # Loprog #
 
+**Development is suspended for a while. Until this fall, I
+guess. Still, any contributions are welcome.**
+
 Loprog (stands for **Lo**gical **prog**ramming) is a stupid
 implementation of [Prolog](https://en.wikipedia.org/wiki/Prolog)
 programming language.
@@ -15,6 +18,10 @@ First of all, you'll need [sbt](http://www.scala-sbt.org/).
 * `$ sbt 'run <source-code-file>'` — run the Loprog interpreter with a
   source code file. There are some examples in the `examples`
   directory. Feel free to experiment with them.
+
+## Contribution ##
+
+Any bug reports, suggestions, and improvements are welcome.
 
 ## License ##
 
