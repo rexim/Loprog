@@ -1,7 +1,6 @@
 # Loprog #
 
-**Development is suspended for a while. Until this fall, I
-guess. Still, any contributions are welcome.**
+**Development is suspended for a while. Still, any contributions are welcome.**
 
 Loprog (stands for **Lo**gical **prog**ramming) is a stupid
 implementation of [Prolog](https://en.wikipedia.org/wiki/Prolog)
